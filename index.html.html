@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#1B4F72">
+<title>Donor Coagulopathy / TMA Kidney Acceptance Tool v0.7</title>
+<style>
+:root{--pri:#1B4F72;--acc:#2E75B6;--grn:#27ae60;--org:#f39c12;--red:#e74c3c;--dkr:#8e1600;--bg:#f4f6f8;--cd:#fff;--bd:#e0e3e8;--tx:#1a1a2e;--t2:#6b7280;--inp:#fff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.c{max-width:680px;margin:0 auto;padding:10px;}
+.hd{text-align:center;padding:14px 0 6px}.hd h1{font-size:17px;font-weight:700;color:var(--pri);line-height:1.2}.hd p{font-size:9px;color:var(--t2);margin-top:2px}
+.gb{background:var(--cd);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;margin-bottom:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gb label{font-size:10px;font-weight:600;color:var(--t2);white-space:nowrap}
+.gb input,.gb select{padding:5px 7px;border:1px solid var(--bd);border-radius:5px;font-size:12px;background:var(--inp);color:var(--tx);outline:none;font-family:inherit}
+.gb input:focus,.gb select:focus{border-color:var(--acc)}
+.gb input{width:58px}.gb select{width:auto;-webkit-appearance:none;appearance:none;padding-right:16px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%236b7280'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 5px center}
+.gb .ts{margin-left:auto;font-size:8px;color:var(--t2)}
+.gear{width:28px;height:28px;border-radius:6px;border:1px solid var(--bd);background:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--t2)}
+.tabs{display:flex;gap:1px;border-bottom:2px solid var(--bd);margin-bottom:8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{padding:6px 9px;font-size:10px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--t2);white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tab.act{color:var(--pri);border-bottom-color:var(--pri)}
+.k{background:var(--cd);border:1px solid var(--bd);border-radius:9px;padding:11px;margin-bottom:8px}
+.k h3{font-size:12px;font-weight:700;color:var(--pri);margin-bottom:2px}
+.k .su{font-size:9px;color:var(--t2);margin-bottom:7px;line-height:1.4}
+.rw{display:flex;gap:7px;margin-bottom:7px;flex-wrap:wrap}
+.fl{flex:1;min-width:90px}
+.fl label{display:block;font-size:9px;font-weight:600;color:var(--t2);margin-bottom:2px}
+.fl input,.fl select,.fl textarea{width:100%;padding:6px 7px;border-radius:5px;border:1px solid var(--bd);background:var(--inp);color:var(--tx);font-size:12px;outline:none;font-family:inherit;-webkit-appearance:none}
+.fl input:focus,.fl select:focus,.fl textarea:focus{border-color:var(--acc);box-shadow:0 0 0 2px rgba(46,117,182,.1)}
+.fl textarea{min-height:50px;resize:vertical}
+.fl .calc{font-size:8px;color:var(--acc);margin-top:1px;font-weight:600}
+.bg{border-radius:9px;padding:9px;text-align:center;flex:1;min-width:100px}
+.bg .l{font-size:8px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.4px}
+.bg .v{font-size:18px;font-weight:700;margin:2px 0}
+.bg .u{font-size:8px;color:var(--t2)}
+.bg .s{font-size:9px;font-weight:600;margin-top:2px}
+.al{padding:7px 9px;border-radius:7px;font-size:10px;margin-top:5px;line-height:1.5}.al b{font-weight:700}
+.al-ok{background:#e8f5e9;border:1px solid #a5d6a7}
+.al-w{background:#fff8e1;border:1px solid #ffe082}
+.al-e{background:#ffeef0;border:1px solid #f5c6cb}
+.al-i{background:#e3f2fd;border:1px solid #90caf9}
+.al-r{background:#fdecea;border:1px solid #f5b7b1}
+table{width:100%;border-collapse:collapse;font-size:9.5px}
+th{background:var(--pri);color:#fff;padding:5px 6px;text-align:left;font-weight:600}
+td{padding:4px 6px;border-bottom:1px solid var(--bd);vertical-align:top}tr:nth-child(even){background:#f9fafb}
+.btn{padding:5px 12px;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;border:none}
+.btn-p{background:var(--pri);color:#fff}.btn-o{background:transparent;border:1px solid var(--bd);color:var(--t2)}.btn-g{background:var(--grn);color:#fff}.btn-r{background:var(--red);color:#fff}
+.br{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+.ft{text-align:center;font-size:7px;color:var(--t2);padding:8px 0;border-top:1px solid var(--bd);margin-top:10px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:9px 18px;border-radius:7px;font-size:11px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}.toast.show{opacity:1}
+.modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:998;display:none;align-items:center;justify-content:center}
+.modal-bg.show{display:flex}
+.modal{background:var(--cd);border-radius:12px;padding:16px;max-width:380px;width:92%;max-height:82vh;overflow-y:auto}
+.modal h3{font-size:14px;font-weight:700;color:var(--pri);margin-bottom:10px}
+.modal .mrw{display:flex;gap:6px;margin-bottom:6px;align-items:center}
+.modal .mrw label{font-size:10px;color:var(--t2);min-width:90px;font-weight:600}
+.modal .mrw input{flex:1;padding:5px 7px;border:1px solid var(--bd);border-radius:5px;font-size:12px;background:var(--inp);color:var(--tx);outline:none}
+.modal .mbr{display:flex;gap:6px;margin-top:10px;justify-content:flex-end;flex-wrap:wrap}
+.bx{border:1px solid var(--bd);border-radius:7px;margin-bottom:6px;overflow:hidden}
+.bx-h{padding:6px 9px;font-size:10px;font-weight:700;background:#f8f9fb;color:var(--pri);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.bx-b{padding:8px 9px;font-size:9.5px;line-height:1.6}
+.ref-tag{display:inline-block;font-size:7px;padding:1px 5px;border-radius:3px;background:#fff3e0;color:#e65100;font-weight:600;margin-left:3px}
+.pmid-tag{display:inline-block;font-size:7px;padding:1px 5px;border-radius:3px;background:#e3f2fd;color:#1565c0;font-weight:600;margin-left:3px;font-family:monospace}
+.hidden{display:none!important}
+.sum{background:var(--pri);color:#fff;border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:10px;line-height:1.5}
+.sum b{font-weight:700}.sum .sl{opacity:.7;font-size:8px}
+.scbar{height:10px;background:var(--bd);border-radius:5px;overflow:hidden;margin:4px 0;position:relative}
+.scbar-f{height:100%;border-radius:5px;transition:width .3s}
+.scrow{display:flex;justify-content:space-between;font-size:9px;color:var(--t2);margin-bottom:2px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.dotg{background:var(--grn)}.doto{background:var(--org)}.dotr{background:var(--red)}.dotk{background:var(--t2)}
+.banner{background:linear-gradient(135deg,#fff3e0 0%,#ffe0b2 100%);border:1px solid #ffb74d;border-radius:7px;padding:7px 10px;margin-bottom:8px;font-size:10px;line-height:1.5;color:#e65100}
+.banner b{font-weight:700}
+.redflag{background:#fdecea;border:2px solid var(--red);border-radius:7px;padding:8px 10px;margin-bottom:8px;font-size:10px;line-height:1.5;color:var(--dkr)}
+.redflag b{font-weight:700;color:var(--red);font-size:11px}
+.timeline{position:relative;padding-left:18px;border-left:2px solid var(--bd);margin:5px 0}
+.tl-item{position:relative;padding:4px 0 4px 8px;font-size:10px}
+.tl-item:before{content:"";position:absolute;left:-22px;top:8px;width:8px;height:8px;border-radius:50%;background:var(--pri)}
+.tl-item .tl-d{font-weight:700;color:var(--pri);font-size:10px}
+.chip{display:inline-block;padding:2px 7px;border-radius:10px;font-size:9px;font-weight:600;margin:1px 2px}
+.chip-g{background:#e8f5e9;color:#2e7d32}.chip-o{background:#fff8e1;color:#e65100}.chip-r{background:#ffeef0;color:#c62828}.chip-b{background:#e3f2fd;color:#1565c0}.chip-k{background:#f5f5f5;color:#616161}
+.miss{background:#fafafa;border:1px dashed var(--t2);border-radius:5px;padding:5px 8px;font-size:9px;color:var(--t2);margin-top:5px}
+.miss b{color:var(--org);font-weight:700}
+</style>
+</head>
+<body>
+<div class="c">
+<div class="hd"><h1>Donor Coagulopathy / TMA Kidney Acceptance Tool</h1><p>v0.7 · Donor-side decision support · Audit-locked amendments · Domain-expanded CSV · <b style="color:var(--org)">DERIVATION-STAGE — UNVALIDATED</b></p></div>
+
+<div class="gb">
+<label>Case ID:</label><input type="text" id="caseId" placeholder="ID/Initials" maxlength="40" style="width:110px" oninput="S.caseId=this.value;R()">
+<label>Donor age:</label><input type="text" inputmode="decimal" pattern="[0-9.]*" id="donAge" placeholder="yrs" maxlength="3" oninput="S.dem.age=this.value;R()">
+<label>Sex:</label><select id="donSex" onchange="S.dem.sex=this.value;R()"><option value="">-</option><option value="M">M</option><option value="F">F</option></select>
+<button class="gear" onclick="openSet()" title="Settings / thresholds">⚙</button>
+<button class="gear" onclick="openCaseSave()" title="Save case">💾</button>
+<button class="gear" onclick="openCaseLoad()" title="Load case">📂</button>
+<button class="gear" onclick="newCase()" title="New donor">🆕</button>
+<span class="ts" id="autoSaveTs" style="color:var(--t2)"></span>
+</div>
+
+<div class="banner"><b>⚠ Derivation-stage tool.</b> Score weights and thresholds are evidence-informed but not yet validated against a prospective cohort. Use as decision aid, not as decision rule. Each accepted case captured here contributes to the derivation dataset — see Audit tab to export.</div>
+
+<div class="tabs" id="tabs"></div>
+<div id="ct"></div>
+<div class="ft">Donor coagulopathy / TMA kidney acceptance · Donor-side parameters only · Time-zero biopsy integration · Designed for resource-limited DDKT settings · Not a substitute for clinical judgment</div>
+</div>
+
+<div class="modal-bg" id="setModal"><div class="modal">
+<h3>⚙ Threshold Settings</h3>
+<div style="font-size:9px;color:var(--t2);margin-bottom:8px">Customize score thresholds for your center. Defaults reflect literature-informed cutpoints.</div>
+<div id="setBody"></div>
+<div class="mbr"><button class="btn btn-o" onclick="resetSet()">Reset defaults</button><button class="btn btn-p" onclick="saveSet()">Save</button></div>
+</div></div>
+
+<div class="modal-bg" id="caseSaveModal"><div class="modal">
+<h3>💾 Save Case</h3>
+<div style="font-size:9px;color:var(--org);margin-bottom:8px;padding:5px 7px;background:#fff8e1;border:1px solid #ffe082;border-radius:5px">⚠ Saved locally in this browser only. Use case ID/initials, not full identifiers.</div>
+<div style="font-size:10px;color:var(--t2);margin-bottom:4px">Label:</div>
+<input type="text" id="caseSaveLabel" maxlength="60" style="width:100%;padding:6px 8px;border:1px solid var(--bd);border-radius:5px;font-size:12px;margin-bottom:8px" placeholder="e.g. RTA donor 12-Mar">
+<div id="caseAmendBox" style="display:none;margin-bottom:8px">
+  <div style="font-size:10px;color:var(--t2);margin-bottom:4px">Amendment reason <span style="color:var(--red)">*</span></div>
+  <textarea id="caseAmendmentReason" maxlength="240" style="width:100%;min-height:54px;padding:6px 8px;border:1px solid var(--bd);border-radius:5px;font-size:12px;font-family:inherit" placeholder="Required when re-saving a previously saved case"></textarea>
+</div>
+<div class="mbr"><button class="btn btn-o" onclick="closeCaseSave()">Cancel</button><button class="btn btn-p" onclick="saveCaseConfirm()">Save</button></div>
+</div></div>
+
+<div class="modal-bg" id="caseLoadModal"><div class="modal">
+<h3>📂 Saved Cases</h3>
+<div style="font-size:9px;color:var(--org);margin-bottom:8px;padding:5px 7px;background:#fff8e1;border:1px solid #ffe082;border-radius:5px">⚠ Stored in browser localStorage only. Cleared if browser data is wiped. Export regularly.</div>
+<div id="caseLoadBody" style="max-height:50vh;overflow-y:auto"></div>
+<div class="mbr" style="flex-wrap:wrap;gap:6px"><button class="btn btn-o" onclick="exportAllCases()">📤 Export JSON</button><button class="btn btn-o" onclick="exportAllCasesCSV()">📊 Export CSV</button><button class="btn btn-o" onclick="document.getElementById('caseImportFile').click()">📥 Import</button><input type="file" id="caseImportFile" accept=".json,application/json" style="display:none" onchange="importCasesFile(this)"><button class="btn btn-p" onclick="closeCaseLoad()">Close</button></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Audit policy: autosave is draft-only and never creates audit snapshots.
+// Only manual Save creates immutable amendment entries for named cases.
+const TABS=["Donor","Score","Donor TMA","Biopsy","Decision","Surveillance","Audit","Reference"];
+const APP_VERSION="v0.7";
+const SCHEMA_VERSION="v0.7-state";
+const CSV_SCHEMA_VERSION="v0.7-domain-expanded-provenance";
+
+// ============ DEFAULT THRESHOLDS ============
+const DEF_THR={
+  pltLow:50, pltMod:100,
+  inrMod:1.5, inrHigh:2.0,
+  ptMod:15, ptHigh:20,
+  apttMod:40, apttHigh:60,
+  fibLow:100, fibMod:150,
+  anuriaModH:12, anuriaHighH:48,
+  pressorMod:0.15, pressorHigh:0.3,
+  scoreLowPct:35, scoreHighPct:65,    // banding now in % of max-of-filled
+  gftDiffuse:50,
+  acceptThr:9
+};
+let THR=JSON.parse(JSON.stringify(DEF_THR));
+try{const t=localStorage.getItem("dctmaThr");if(t)THR=Object.assign({},DEF_THR,JSON.parse(t));}catch(e){}
+
+// ============ STATE (v0.2 schema) ============
+let S={
+  tab:0, caseId:"", caseRecordId:"", caseLabel:"", amendmentReason:"", amendments:[],
+  // Demographics — mechanism is mechanism only (no DIC declaration)
+  dem:{age:"",sex:"",mechanism:"",icuDays:"",injuryToBdDays:"",injuryToBdHours:"",bdToHarvestHours:""},
+  // Coagulopathy — full lab panel including PT-fallback and D-dimer status (categorical)
+  coag:{pltAdmit:"",pltNadir:"",pltAtHarvest:"",inrPeak:"",ptSec:"",aptt:"",fibrinogen:"",ddimer:"",ddimerStatus:"unk",hbAdmit:"",hbNadir:"",hbAtHarvest:"",bldUnits:"",ffpUnits:"",pltUnits:"",cryoUnits:"",schistocytes:"unk"},
+  // Hemodynamics — SBP/DBP min auto-compute MAP
+  hemo:{pressorAgents:"",pressorPeak:"",pressorDuration:"",sbpMin:"",dbpMin:"",anuriaHrs:"",uop24h:""},
+  renal:{crAdmit:"",crPeak:"",crHarvest:"",rrt:"no"},
+  retr:{appearance:"normal",flushQuality:"good"},
+  // Time-zero biopsy
+  bx:{done:"no",timing:"preimplant",glomTotal:"",gftPct:"",ptcThrombi:"no",endoSwell:"no",mesangiolysis:"no",atnGrade:"none",c4d:"unk",cd61:"unk",corticalNec:"none",chronicChanges:"none",notes:""},
+  // Recipient TMA detection — moved from "discriminate" to surveillance
+  recTma:{pod1Plt:"",pod3Plt:"",pod7Plt:"",pod1LDH:"",pod3LDH:"",pod7LDH:"",pod1UOP:"",pod3UOP:"",pod7UOP:"",pod7Smear:"unk",mahaApp:"",dgfDays:"",pnf:"no",recipBx:"none",recipBxDay:"",recipBxFinding:""},
+  // Decision — captures tool recommendation vs decision taken delta
+  decision:{toolRec:"",taken:"",rationale:"",graftNumber:"",surgeon:"",delta:""},
+  ts:null
+};
+const DEF_S=JSON.stringify(S);
+
+// ============ DOM HELPERS ============
+const $=id=>document.getElementById(id);
+const pf=v=>parseFloat(v);
+const ok=v=>v!==""&&v!==null&&v!==undefined&&!isNaN(pf(v))&&pf(v)>0;
+const okZ=v=>v!==""&&v!==null&&v!==undefined&&!isNaN(pf(v))&&pf(v)>=0;
+const filled=v=>v!==""&&v!==null&&v!==undefined&&v!=="unk"&&v!=="-";
+
+function sT(m){const t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200);}
+
+// ============ FOCUS PRESERVATION ============
+let _rf=null;
+function _sv(){
+  const e=document.activeElement;
+  if(e&&(e.tagName==="INPUT"||e.tagName==="SELECT"||e.tagName==="TEXTAREA")&&!e.closest(".gb")&&!e.closest(".modal")){
+    _rf={a:e.getAttribute("oninput")||e.getAttribute("onchange")||"",p:e.selectionStart||0};
+  }
+}
+function _rs(){
+  if(_rf){
+    const els=$("ct").querySelectorAll("input,select,textarea");
+    for(const e of els){
+      const sig=(e.getAttribute("oninput")||"")+(e.getAttribute("onchange")||"");
+      if(_rf.a&&sig.includes(_rf.a)){e.focus();try{e.setSelectionRange(_rf.p,_rf.p);}catch(x){}break;}
+    }
+    _rf=null;
+  }
+}
+function setPath(path,val){
+  _sv();
+  const parts=path.split(".");
+  let o=S;
+  for(let i=0;i<parts.length-1;i++)o=o[parts[i]];
+  o[parts[parts.length-1]]=val;
+  R();
+}
+function sV(path,val){setPath(path,val);}
+
+// ============ AUTOSAVE / CASE LIBRARY ============
+const CASE_MAX=50;
+function syncDecisionState(){
+  // Compute and persist tool recommendation + delta to S — must NOT call R() (recursion)
+  try{
+    const d=decisionEngine();
+    S.decision.toolRec=d.toolRec||"";
+    S.decision.delta=_deltaCheck(d.toolRec,S.decision.taken)?"yes":"no";
+  }catch(e){/* swallow — partial state OK */}
+}
+function _saveSnapshot(){
+  try{
+    syncDecisionState();
+    localStorage.setItem("dctmaCurrentCase",JSON.stringify(S));
+    const el=$("autoSaveTs");
+    if(el){const now=new Date();el.textContent="· Saved "+now.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"});}
+  }catch(e){}
+}
+function _restoreSnapshot(){
+  try{
+    const raw=localStorage.getItem("dctmaCurrentCase");
+    if(!raw)return false;
+    S=_mergeDeep(S,JSON.parse(raw));
+    return true;
+  }catch(e){try{localStorage.removeItem("dctmaCurrentCase");}catch(_){}return false;}
+}
+function _mergeDeep(t,s){
+  if(s===null||typeof s!=="object")return s;
+  if(Array.isArray(s))return s.slice();
+  const o=Array.isArray(t)?t.slice():Object.assign({},t||{});
+  for(const k in s){
+    if(s[k]!==null&&typeof s[k]==="object"&&!Array.isArray(s[k])){o[k]=_mergeDeep(t&&t[k]?t[k]:{},s[k]);}
+    else o[k]=s[k];
+  }
+  return o;
+}
+function _caseIndex(){try{const r=localStorage.getItem("dctmaCaseIndex");return r?JSON.parse(r):[];}catch(e){return [];}}
+function _writeCaseIndex(idx){try{localStorage.setItem("dctmaCaseIndex",JSON.stringify(idx));}catch(e){}}
+function stableStringify(obj){
+  if(obj===null||typeof obj!=="object")return JSON.stringify(obj);
+  if(Array.isArray(obj))return "["+obj.map(stableStringify).join(",")+"]";
+  const keys=Object.keys(obj).sort();
+  return "{"+keys.map(k=>JSON.stringify(k)+":"+stableStringify(obj[k])).join(",")+"}";
+}
+function csvCell(x){
+  const s=x===undefined||x===null?"":String(x).replace(/\r?\n/g," ");
+  return `"${s.replace(/"/g,'""')}"`;
+}
+function leafPaths(obj,prefix=""){
+  if(obj===null||typeof obj!=="object")return prefix?[prefix]:[];
+  if(Array.isArray(obj))return prefix?[prefix]:[];
+  const keys=Object.keys(obj);
+  if(!keys.length)return prefix?[prefix]:[];
+  let out=[];
+  keys.forEach(k=>{
+    const path=prefix?`${prefix}.${k}`:k;
+    out=out.concat(leafPaths(obj[k],path));
+  });
+  return out;
+}
+function missingSchemaFieldList(raw){
+  const current=new Set(leafPaths(JSON.parse(DEF_S)));
+  const present=new Set(leafPaths(raw||{}));
+  return [...current].filter(p=>!present.has(p)).sort();
+}
+function buildDerivedSnapshot(state){
+  const sc=_scoreFor(state);
+  const dic=_dicFor(state);
+  const tma=_tmaSuspicionFor(state);
+  const rf=_redFlagFor(state);
+  const de=decisionEngine();
+  return {
+    score_total:sc.total,
+    score_max_filled:sc.maxFilled,
+    score_max_possible:sc.maxPossible,
+    score_pct_available:sc.pctOfFilled.toFixed(1),
+    band:sc.bandLabel,
+    dic_derived:dic.flag,
+    tma_suspicion:tma.label,
+    redflag_active:rf.active?rf.reasons.length:0,
+    tool_recommendation:de.toolRec||"",
+    decision_delta:_deltaCheck(de.toolRec,state.decision.taken)?"yes":"no"
+  };
+}
+function buildAmendmentEntry(state,reason){
+  return {
+    snapshotAt:new Date().toISOString(),
+    appVersion:APP_VERSION,
+    schemaVersion:SCHEMA_VERSION,
+    reason:reason||"",
+    thresholds:JSON.parse(JSON.stringify(THR)),
+    derived:buildDerivedSnapshot(state)
+  };
+}
+function openCaseSave(){
+  const hasNamedCase=!!(S.caseRecordId&&localStorage.getItem("dctmaCase_"+S.caseRecordId));
+  const lbl=S.caseLabel||S.caseId||("Case "+new Date().toLocaleString("en-IN",{dateStyle:"short",timeStyle:"short"}));
+  $("caseSaveLabel").value=lbl;
+  const box=$("caseAmendBox"),reason=$("caseAmendmentReason");
+  if(box){box.style.display=hasNamedCase?"block":"none";}
+  if(reason){reason.value="";}
+  $("caseSaveModal").classList.add("show");
+  setTimeout(()=>$("caseSaveLabel").focus(),50);
+}
+function closeCaseSave(){$("caseSaveModal").classList.remove("show");}
+function saveCaseConfirm(){
+  const label=($("caseSaveLabel").value||"").trim()||("Case "+Date.now());
+  const existingId=S.caseRecordId||"";
+  const existingRawStr=existingId?localStorage.getItem("dctmaCase_"+existingId):null;
+  const id=existingRawStr?existingId:String(Date.now());
+  try{
+    const reason=(($("caseAmendmentReason")||{}).value||"").trim();
+    const existingRaw=existingRawStr?JSON.parse(existingRawStr):null;
+    const existingAmendments=existingRaw&&Array.isArray(existingRaw.amendments)?existingRaw.amendments:[];
+    if(existingRaw&&reason.length===0){sT("Amendment reason required");return;}
+    if(existingAmendments.length>0){
+      if(S.amendments&&S.amendments[0]&&stableStringify(S.amendments[0])!==stableStringify(existingAmendments[0])){
+        throw new Error("amendment[0] mutation detected — refusing to save");
+      }
+      S.amendments=existingAmendments.slice();
+      S.amendments.push(buildAmendmentEntry(S,reason));
+    } else {
+      S.amendments=[buildAmendmentEntry(S,existingRaw?reason:"")];
+    }
+    S.ts=new Date().toISOString();
+    S.caseRecordId=id;
+    S.caseLabel=label;
+    S.amendmentReason="";
+    syncDecisionState();
+    const sc=computeScore();
+    localStorage.setItem("dctmaCase_"+id,JSON.stringify(S));
+    let idx=_caseIndex().filter(c=>c.id!==id);
+    idx.unshift({id,label,savedAt:S.ts,score:sc.total,scoreMax:sc.maxFilled,band:sc.bandLabel,decision:S.decision.taken||""});
+    while(idx.length>CASE_MAX){const drop=idx.pop();try{localStorage.removeItem("dctmaCase_"+drop.id);}catch(e){}}
+    _writeCaseIndex(idx);
+    closeCaseSave();
+    sT(existingRaw?"Amendment saved: "+label:"Case saved: "+label);
+  }catch(e){console.error(e);sT("Save failed: "+(e&&e.message?e.message:"audit error"));}
+}
+function openCaseLoad(){renderCaseList();$("caseLoadModal").classList.add("show");}
+function closeCaseLoad(){$("caseLoadModal").classList.remove("show");}
+function renderCaseList(){
+  const idx=_caseIndex();
+  const body=$("caseLoadBody");
+  if(!idx.length){body.innerHTML=`<div style="font-size:10px;color:var(--t2);text-align:center;padding:16px">No saved cases yet.</div>`;return;}
+  body.innerHTML=idx.map(c=>{
+    const when=new Date(c.savedAt).toLocaleString("en-IN",{dateStyle:"short",timeStyle:"short"});
+    const safe=c.label.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    const sc=c.score!==undefined?` · ${c.score}/${c.scoreMax||13} ${c.band||""}`:"";
+    const dc=c.decision?` · ${c.decision}`:"";
+    return `<div style="display:flex;align-items:center;gap:6px;padding:6px 4px;border-bottom:1px solid var(--bd)">
+      <div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:600;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${safe}</div><div style="font-size:8px;color:var(--t2)">${when}${sc}${dc}</div></div>
+      <button class="btn btn-p" style="padding:4px 8px;font-size:10px" onclick="loadCase('${c.id}')">Load</button>
+      <button class="btn btn-o" style="padding:4px 8px;font-size:10px" onclick="deleteCase('${c.id}')">×</button>
+    </div>`;
+  }).join("");
+}
+function loadCase(id){
+  try{
+    const raw=localStorage.getItem("dctmaCase_"+id);
+    if(!raw){sT("Case not found");return;}
+    const idx=_caseIndex();
+    const meta=idx.find(c=>c.id===id)||{};
+    S=_mergeDeep(JSON.parse(DEF_S),JSON.parse(raw));
+    S.caseRecordId=id;
+    S.caseLabel=meta.label||S.caseLabel||S.caseId||"";
+    S.amendmentReason="";
+    closeCaseLoad();
+    syncTopInputs();
+    R();
+    sT("Case loaded");
+  }catch(e){sT("Load failed");}
+}
+function deleteCase(id){
+  if(!confirm("Delete this case?"))return;
+  try{localStorage.removeItem("dctmaCase_"+id);}catch(e){}
+  _writeCaseIndex(_caseIndex().filter(c=>c.id!==id));
+  if(S.caseRecordId===id){S.caseRecordId="";S.caseLabel="";}
+  renderCaseList();sT("Case deleted");
+}
+function newCase(){
+  if(!confirm("Clear current case? (Saved cases are not affected.)"))return;
+  try{S=JSON.parse(DEF_S);}catch(e){}
+  syncTopInputs();
+  R();sT("New case started");
+}
+function syncTopInputs(){
+  const f={caseId:"caseId",donAge:"dem.age",donSex:"dem.sex"};
+  for(const id in f){
+    const el=$(id);
+    if(!el)continue;
+    const path=f[id].split(".");
+    let v=S;for(const p of path)v=v?v[p]:"";
+    el.value=v||"";
+  }
+}
+function exportAllCases(){
+  const idx=_caseIndex();
+  if(!idx.length){sT("No cases to export");return;}
+  const dump={version:APP_VERSION,tool:"dctma",csvSchemaVersion:CSV_SCHEMA_VERSION,exportedAt:new Date().toISOString(),thresholds:THR,cases:idx.map(c=>{
+    try{return{meta:c,data:JSON.parse(localStorage.getItem("dctmaCase_"+c.id))};}catch(e){return null;}
+  }).filter(x=>x)};
+  const blob=new Blob([JSON.stringify(dump,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="dctma-cases-"+new Date().toISOString().slice(0,10)+".json";
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  sT("Exported "+dump.cases.length+" cases");
+}
+function exportAllCasesCSV(){
+  const idx=_caseIndex();
+  if(!idx.length){sT("No cases to export");return;}
+  const rows=[];
+  const hdr=[
+    // Case / provenance / donor demographics
+    "caseId","savedAt","app_version_at_save","schema_version_at_save","score_provenance","amendment_count","snapshot_at","missing_schema_fields_count","missing_schema_fields","donor_age","sex","mechanism","icu_days","injury_to_bd_days","bd_to_retrieval_h",
+    // Coagulation
+    "plt_admit","plt_nadir","plt_at_harvest","inr_peak","pt_sec","aptt","fibrinogen","ddimer_value","ddimer_status","schistocytes","hb_admit","hb_nadir","hb_at_harvest","prbc_units","ffp_units","plt_units","cryo_units",
+    // Hemodynamics
+    "pressor_agents","pressor_peak","pressor_duration","sbp_min","dbp_min","map_calc","anuria_hrs","uop_24h",
+    // Renal function
+    "cr_admit","cr_peak","cr_harvest","rrt",
+    // Retrieval / gross
+    "gross_appearance","flush_quality",
+    // Biopsy
+    "bx_done","bx_timing","glom_total","gft_pct","ptc_thrombi","endo_swell","mesangiolysis","atn_grade","c4d","cd61","cortical_nec","chronic_changes",
+    // Derived donor coagulopathy / TMA flags
+    "dic_derived","tma_suspicion","redflag_active",
+    // Score
+    "score_total","score_max_filled","score_max_possible","score_pct_available","band",
+    // Decision tracking
+    "tool_recommendation","decision","decision_delta","graft_number","surgeon","decision_rationale",
+    // Recipient trajectory / outcomes
+    "pod1_plt","pod3_plt","pod7_plt","pod1_ldh","pod3_ldh","pod7_ldh","pod1_uop","pod3_uop","pod7_uop","pod7_smear","dgf_days","pnf","recip_bx","recip_bx_day","recip_bx_finding"
+  ];
+  rows.push(hdr.map(csvCell).join(","));
+  idx.forEach(c=>{
+    try{
+      const raw=JSON.parse(localStorage.getItem("dctmaCase_"+c.id));
+      if(!raw)return;
+      const missing=missingSchemaFieldList(raw);
+      const d=_mergeDeep(JSON.parse(DEF_S),raw);
+      const amendments=Array.isArray(raw.amendments)?raw.amendments:[];
+      const latest=amendments.length?amendments[amendments.length-1]:null;
+      const frozen=latest&&latest.derived?latest.derived:{};
+      let scoreProvenance="recomputed_legacy";
+      if(latest){scoreProvenance=amendments.length===1?"frozen_original":"frozen_amendment";}
+      else if(raw.schemaVersionAtSave||raw.appVersionAtSave){scoreProvenance="recomputed_no_snapshot";}
+      const sc=_scoreFor(d);
+      const dic=_dicFor(d);
+      const tma=_tmaSuspicionFor(d);
+      const rf=_redFlagFor(d);
+      const r=[
+        // Case / provenance / donor demographics
+        d.caseId||"",c.savedAt,latest?latest.appVersion:(raw.appVersionAtSave||""),latest?latest.schemaVersion:(raw.schemaVersionAtSave||""),scoreProvenance,amendments.length,latest?latest.snapshotAt:"",missing.length,missing.join(";"),d.dem.age,d.dem.sex,d.dem.mechanism,d.dem.icuDays,d.dem.injuryToBdDays,d.dem.bdToHarvestHours,
+        // Coagulation
+        d.coag.pltAdmit,d.coag.pltNadir,d.coag.pltAtHarvest,d.coag.inrPeak,d.coag.ptSec,d.coag.aptt,d.coag.fibrinogen,d.coag.ddimer,d.coag.ddimerStatus,d.coag.schistocytes,d.coag.hbAdmit,d.coag.hbNadir,d.coag.hbAtHarvest,d.coag.bldUnits,d.coag.ffpUnits,d.coag.pltUnits,d.coag.cryoUnits,
+        // Hemodynamics
+        d.hemo.pressorAgents,d.hemo.pressorPeak,d.hemo.pressorDuration,d.hemo.sbpMin,d.hemo.dbpMin,_calcMAP(d.hemo.sbpMin,d.hemo.dbpMin),d.hemo.anuriaHrs,d.hemo.uop24h,
+        // Renal function
+        d.renal.crAdmit,d.renal.crPeak,d.renal.crHarvest,d.renal.rrt,
+        // Retrieval / gross
+        d.retr.appearance,d.retr.flushQuality,
+        // Biopsy
+        d.bx.done,d.bx.timing,d.bx.glomTotal,d.bx.gftPct,d.bx.ptcThrombi,d.bx.endoSwell,d.bx.mesangiolysis,d.bx.atnGrade,d.bx.c4d,d.bx.cd61,d.bx.corticalNec,d.bx.chronicChanges,
+        // Derived flags
+        frozen.dic_derived??dic.flag,frozen.tma_suspicion??tma.label,frozen.redflag_active??(rf.active?rf.reasons.length:0),
+        // Score
+        frozen.score_total??sc.total,frozen.score_max_filled??sc.maxFilled,frozen.score_max_possible??sc.maxPossible,frozen.score_pct_available??sc.pctOfFilled.toFixed(1),frozen.band??sc.bandLabel,
+        // Decision tracking
+        frozen.tool_recommendation??(d.decision.toolRec||""),d.decision.taken||"",frozen.decision_delta??(d.decision.delta||""),d.decision.graftNumber||"",d.decision.surgeon||"",d.decision.rationale||"",
+        // Recipient trajectory / outcomes
+        d.recTma.pod1Plt,d.recTma.pod3Plt,d.recTma.pod7Plt,d.recTma.pod1LDH,d.recTma.pod3LDH,d.recTma.pod7LDH,d.recTma.pod1UOP,d.recTma.pod3UOP,d.recTma.pod7UOP,d.recTma.pod7Smear,d.recTma.dgfDays,d.recTma.pnf,d.recTma.recipBx,d.recTma.recipBxDay,d.recTma.recipBxFinding||""
+      ];
+      rows.push(r.map(csvCell).join(","));
+    }catch(e){console.error("CSV export skipped case",c&&c.id,e);}
+  });
+  const blob=new Blob([rows.join("\n")],{type:"text/csv"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="dctma-cohort-"+new Date().toISOString().slice(0,10)+".csv";
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  sT("Exported "+(rows.length-1)+" rows");
+}
+function importCasesFile(inputEl){
+  const f=inputEl.files&&inputEl.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=function(){
+    try{
+      const dump=JSON.parse(r.result);
+      if(!dump||!Array.isArray(dump.cases)){sT("Invalid file format");return;}
+      let idx=_caseIndex();
+      let added=0;
+      dump.cases.forEach(c=>{
+        if(!c||!c.meta||!c.data)return;
+        const newId=String(Date.now()+Math.floor(Math.random()*1000)+added);
+        try{
+          localStorage.setItem("dctmaCase_"+newId,JSON.stringify(c.data));
+          idx.unshift({id:newId,label:(c.meta.label||"Imported")+" (imp)",savedAt:c.meta.savedAt||new Date().toISOString(),score:c.meta.score,decision:c.meta.decision});
+          added++;
+        }catch(e){}
+      });
+      while(idx.length>CASE_MAX){const drop=idx.pop();try{localStorage.removeItem("dctmaCase_"+drop.id);}catch(e){}}
+      _writeCaseIndex(idx);
+      renderCaseList();sT("Imported "+added+" cases");
+    }catch(e){sT("Import failed");}
+    inputEl.value="";
+  };
+  r.readAsText(f);
+}
+
+// ============ SETTINGS MODAL ============
+function openSet(){
+  const rows=[
+    ["Platelet — moderate (×10⁹/L)","pltMod"],
+    ["Platelet — severe (×10⁹/L)","pltLow"],
+    ["INR — moderate","inrMod"],
+    ["INR — severe","inrHigh"],
+    ["PT — moderate (sec)","ptMod"],
+    ["PT — severe (sec)","ptHigh"],
+    ["aPTT — moderate (sec)","apttMod"],
+    ["aPTT — severe (sec)","apttHigh"],
+    ["Fibrinogen — low (mg/dL)","fibLow"],
+    ["Anuria — moderate (h)","anuriaModH"],
+    ["Anuria — severe (h)","anuriaHighH"],
+    ["Pressor — moderate (NA-eq)","pressorMod"],
+    ["Pressor — severe (NA-eq)","pressorHigh"],
+    ["GFT diffuse threshold (%)","gftDiffuse"],
+    ["Score band — low/int (%)","scoreLowPct"],
+    ["Score band — int/high (%)","scoreHighPct"],
+    ["Score — review threshold","acceptThr"]
+  ];
+  let h=`<div style="background:#f0f7ff;border:1px solid #bbd9f5;border-radius:6px;padding:6px 8px;margin-bottom:8px;font-size:10px">Banding now in % of max-of-filled. Default low &lt;35%, intermediate 35–65%, high ≥65%.</div>`;
+  rows.forEach(r=>{h+=`<div class="mrw"><label>${r[0]}</label><input id="thr_${r[1]}" value="${THR[r[1]]}"></div>`;});
+  $("setBody").innerHTML=h;
+  $("setModal").classList.add("show");
+}
+function saveSet(){
+  Object.keys(THR).forEach(k=>{const el=$("thr_"+k);if(el){const v=parseFloat(el.value);if(!isNaN(v))THR[k]=v;}});
+  try{localStorage.setItem("dctmaThr",JSON.stringify(THR));}catch(e){}
+  $("setModal").classList.remove("show");R();sT("Thresholds saved");
+}
+function resetSet(){
+  THR=JSON.parse(JSON.stringify(DEF_THR));
+  try{localStorage.removeItem("dctmaThr");}catch(e){}
+  $("setModal").classList.remove("show");R();sT("Defaults restored");
+}
+$("setModal").addEventListener("click",e=>{if(e.target===$("setModal"))$("setModal").classList.remove("show");});
+
+// ============ DERIVED MAP ============
+function _calcMAP(sbpV,dbpV){
+  if(!ok(sbpV)||!ok(dbpV))return "";
+  const s=pf(sbpV),d=pf(dbpV);
+  if(s<=d)return "";
+  return Math.round((s+2*d)/3);
+}
+
+// ============ DERIVED DIC FLAG ============
+// Donor coagulopathy pattern logic using available donor-side labs
+// Returns: {flag: "overt_dic"|"dic_likely"|"dic_possible"|"unlikely"|"insufficient", score, reasons[], components}
+function _dicFor(state){
+  const reasons=[];const components=[];
+  let pts=0,maxPts=0;
+  // Platelet
+  if(ok(state.coag.pltNadir)){
+    const p=pf(state.coag.pltNadir);maxPts+=2;
+    if(p<THR.pltLow){pts+=2;components.push({l:"Platelet",v:`${p} (severe)`,p:2});reasons.push("severe thrombocytopenia");}
+    else if(p<THR.pltMod){pts+=1;components.push({l:"Platelet",v:`${p} (moderate)`,p:1});reasons.push("moderate thrombocytopenia");}
+    else components.push({l:"Platelet",v:`${p}`,p:0});
+  }
+  // INR or PT (whichever available)
+  let coagDone=false;
+  if(ok(state.coag.inrPeak)){
+    const i=pf(state.coag.inrPeak);maxPts+=2;coagDone=true;
+    if(i>THR.inrHigh){pts+=2;components.push({l:"INR",v:`${i} (severe)`,p:2});reasons.push("severe INR prolongation");}
+    else if(i>THR.inrMod){pts+=1;components.push({l:"INR",v:`${i} (moderate)`,p:1});reasons.push("INR prolonged");}
+    else components.push({l:"INR",v:`${i}`,p:0});
+  } else if(ok(state.coag.ptSec)){
+    const p=pf(state.coag.ptSec);maxPts+=2;coagDone=true;
+    if(p>THR.ptHigh){pts+=2;components.push({l:"PT (sec)",v:`${p} (severe)`,p:2});reasons.push("severe PT prolongation");}
+    else if(p>THR.ptMod){pts+=1;components.push({l:"PT (sec)",v:`${p} (moderate)`,p:1});reasons.push("PT prolonged");}
+    else components.push({l:"PT (sec)",v:`${p}`,p:0});
+  }
+  // aPTT
+  if(ok(state.coag.aptt)){
+    const a=pf(state.coag.aptt);maxPts+=1;
+    if(a>THR.apttHigh){pts+=1;components.push({l:"aPTT",v:`${a} (high)`,p:1});reasons.push("aPTT prolonged");}
+    else if(a>THR.apttMod){pts+=0.5;components.push({l:"aPTT",v:`${a} (mod)`,p:0.5});}
+    else components.push({l:"aPTT",v:`${a}`,p:0});
+  }
+  // Fibrinogen (rare in GH)
+  if(ok(state.coag.fibrinogen)){
+    const f=pf(state.coag.fibrinogen);maxPts+=2;
+    if(f<THR.fibLow){pts+=2;components.push({l:"Fibrinogen",v:`${f} (low)`,p:2});reasons.push("hypofibrinogenemia (consumption)");}
+    else components.push({l:"Fibrinogen",v:`${f}`,p:0});
+  }
+  // D-dimer — categorical binary (assays/units vary too much for numeric scoring)
+  if(state.coag.ddimerStatus==="elevated"){
+    maxPts+=1;pts+=1;
+    components.push({l:"D-dimer",v:"elevated by donor-lab reference",p:1});
+    reasons.push("elevated fibrin-related marker");
+  } else if(state.coag.ddimerStatus==="normal"){
+    maxPts+=1;
+    components.push({l:"D-dimer",v:"normal by donor-lab reference",p:0});
+  }
+  // Schistocytes — supportive
+  if(state.coag.schistocytes==="present"){maxPts+=1;pts+=1;components.push({l:"Schistocytes",v:"present",p:1});reasons.push("schistocytes (MAHA)");}
+  // Transfusion burden — supportive (large transfusion suggests consumptive process)
+  if(ok(state.coag.bldUnits)&&pf(state.coag.bldUnits)>=4){maxPts+=1;pts+=1;components.push({l:"PRBC ≥4 units",v:`${state.coag.bldUnits}`,p:1});reasons.push("massive transfusion");}
+
+  // Determine flag — absolute thresholds + componentCount gate to prevent single-marker overcall
+  const componentCount=components.length;
+  let flag,label,col;
+  if(maxPts===0){flag="insufficient";label="INSUFFICIENT DATA";col="var(--t2)";}
+  else if(pts>=4&&coagDone){flag="overt_dic";label="OVERT DIC PATTERN";col="var(--red)";}
+  else if(pts>=3&&componentCount>=2){flag="dic_likely";label="DIC LIKELY";col="var(--org)";}
+  else if(pts>=1){flag="dic_possible";label="DIC POSSIBLE";col="var(--org)";}
+  else {flag="unlikely";label="DIC UNLIKELY";col="var(--grn)";}
+  return {flag,label,col,pts,maxPts,reasons,components,coagDone};
+}
+
+// ============ DERIVED TMA SUSPICION (donor-side, at offer) ============
+// Differentiates trauma-DIC from primary donor TMA pattern
+function _tmaSuspicionFor(state){
+  const reasons=[];let tmaSig=0,dicSig=0;
+  const dic=_dicFor(state);
+  const m=state.dem.mechanism;
+  // Mechanism (non-trauma reduced from +2 to +1; primary TMA signal still fires when MAHA features coexist)
+  if(m==="non_trauma"){tmaSig+=1;reasons.push({src:"mechanism",v:"non-trauma / atypical — TMA signal contributes when MAHA features present",dir:"tma"});}
+  else if(m==="trauma"){dicSig+=2;reasons.push({src:"mechanism",v:"trauma — DIC most likely",dir:"dic"});}
+  else if(m==="anoxic"){dicSig+=1;reasons.push({src:"mechanism",v:"anoxic injury — variable",dir:"dic"});}
+  // Coag pattern
+  const inrAbn=ok(state.coag.inrPeak)&&pf(state.coag.inrPeak)>THR.inrMod;
+  const ptAbn=ok(state.coag.ptSec)&&pf(state.coag.ptSec)>THR.ptMod;
+  const apttAbn=ok(state.coag.aptt)&&pf(state.coag.aptt)>THR.apttMod;
+  const fibLow=ok(state.coag.fibrinogen)&&pf(state.coag.fibrinogen)<THR.fibLow;
+  const pltLow=ok(state.coag.pltNadir)&&pf(state.coag.pltNadir)<THR.pltMod;
+  const pltSevere=ok(state.coag.pltNadir)&&pf(state.coag.pltNadir)<THR.pltLow;
+  const coagAbn=inrAbn||ptAbn||apttAbn;
+  if((inrAbn||ptAbn)&&apttAbn&&pltLow){dicSig+=2;reasons.push({src:"coag pattern",v:"PT/INR + aPTT + platelet — consumptive (DIC)",dir:"dic"});}
+  if(fibLow){dicSig+=2;reasons.push({src:"fibrinogen",v:`<${THR.fibLow} mg/dL — consumption`,dir:"dic"});}
+  if(pltLow&&!coagAbn&&!fibLow&&(ok(state.coag.inrPeak)||ok(state.coag.ptSec))){tmaSig+=2;reasons.push({src:"coag pattern",v:"isolated thrombocytopenia + normal coag — primary TMA pattern",dir:"tma"});}
+  if(pltSevere&&!coagAbn&&m==="non_trauma"){tmaSig+=2;reasons.push({src:"severity",v:"severe isolated thrombocytopenia in non-trauma — TTP/aHUS suspect",dir:"tma"});}
+  // Schistocytes
+  if(state.coag.schistocytes==="present"){
+    if(coagAbn){dicSig+=1;reasons.push({src:"schistocytes",v:"present + coagulopathy — DIC microangiopathy",dir:"dic"});}
+    else {tmaSig+=2;reasons.push({src:"schistocytes",v:"present without coagulopathy — TMA/TTP pattern",dir:"tma"});}
+  }
+  // Time course
+  const ibd=pf(state.dem.injuryToBdDays);
+  if(ok(state.dem.injuryToBdDays)&&ibd<=2&&m==="trauma"){dicSig+=1;reasons.push({src:"timing",v:"≤2d injury→BD with trauma → acute trauma DIC",dir:"dic"});}
+  // Hb drop without transfusion
+  const hbAdmit=pf(state.coag.hbAdmit),hbNadir=pf(state.coag.hbNadir);
+  const hbDrop=ok(state.coag.hbAdmit)&&ok(state.coag.hbNadir)&&(hbAdmit-hbNadir)>3;
+  const noTransfusion=!ok(state.coag.bldUnits)||pf(state.coag.bldUnits)<2;
+  if(hbDrop&&noTransfusion){tmaSig+=1;reasons.push({src:"Hb drop",v:"unexplained Hb fall without transfusion — hemolysis suspect",dir:"tma"});}
+
+  let label,col;
+  const diff=tmaSig-dicSig;
+  // Lab-feature gate: TMA classification requires evidence beyond mechanism alone
+  const hasTmaLabFeature=reasons.some(r=>r.dir==="tma"&&r.src!=="mechanism");
+  if(tmaSig===0&&dicSig===0){label="INDETERMINATE";col="var(--t2)";}
+  else if(!hasTmaLabFeature&&m==="non_trauma"){label="NON-TRAUMA MECHANISM ONLY — INDETERMINATE";col="var(--t2)";}
+  else if(diff>=2){label="PRIMARY TMA — ELEVATED SUSPICION";col="var(--red)";}
+  else if(diff>=0&&hasTmaLabFeature){label="PRIMARY TMA — POSSIBLE";col="var(--org)";}
+  else if(dicSig-tmaSig>=2){label="TRAUMA-DIC PATTERN";col="var(--grn)";}
+  else {label="MIXED PATTERN";col="var(--org)";}
+  return {tmaSig,dicSig,reasons,label,col,dic};
+}
+
+// ============ RED FLAG OVERRIDE ============
+function _redFlagFor(state){
+  const reasons=[];
+  // RF1: Diffuse cortical necrosis
+  if(state.bx.done==="yes"&&state.bx.corticalNec==="diffuse"){
+    reasons.push({type:"decline",reason:"Diffuse cortical necrosis on biopsy — irreversible. Decline."});
+  }
+  // RF2: Cyanotic + anuria>48h + plt<50
+  const an=pf(state.hemo.anuriaHrs);
+  const plt=pf(state.coag.pltNadir);
+  if(state.retr.appearance==="cyanotic"&&ok(state.hemo.anuriaHrs)&&an>48&&ok(state.coag.pltNadir)&&plt<50){
+    reasons.push({type:"high",reason:"Diffuse cyanotic gross + anuria >48h + platelet <50: severe ischemic + consumptive injury combined. Mandatory biopsy + attending review."});
+  }
+  // RF3: MAHA pattern (schistocytes + isolated thrombocytopenia + non-trauma)
+  if(state.coag.schistocytes==="present"&&ok(state.coag.pltNadir)&&plt<THR.pltMod&&state.dem.mechanism==="non_trauma"){
+    const inrAbn=ok(state.coag.inrPeak)&&pf(state.coag.inrPeak)>THR.inrMod;
+    const ptAbn=ok(state.coag.ptSec)&&pf(state.coag.ptSec)>THR.ptMod;
+    if(!inrAbn&&!ptAbn){
+      reasons.push({type:"tma_high",reason:"MAHA pattern (schistocytes + isolated thrombocytopenia + non-trauma): primary donor TMA suspected. Hold for biopsy + ADAMTS13 if accessible. Decline preferred over speculative accept in sensitized recipient."});
+    }
+  }
+  // RF4: Diffuse GFT — high but NOT decline
+  if(state.bx.done==="yes"&&ok(state.bx.gftPct)&&pf(state.bx.gftPct)>=THR.gftDiffuse){
+    reasons.push({type:"high_acceptable",reason:`Diffuse GFT (${state.bx.gftPct}%) — Gao 2019 (n=24, single-center, all severe head trauma) reported 92% acceptable graft outcome at 1 year in this selected cohort. High-risk but accept defensible with mandatory protocol biopsy at 1 month.`});
+  }
+  // RF5: Donor required RRT before retrieval
+  if(state.renal.rrt==="yes"){
+    reasons.push({type:"high",reason:"Donor required RRT before retrieval — severe AKI. Acceptable in selected cases (Heilman 2015) but mandatory biopsy + escalated surveillance."});
+  }
+  // RF6: Overt donor coagulopathy pattern by lab criteria (≥4 weighted points + coag tested)
+  const dic=_dicFor(state);
+  if(dic.flag==="overt_dic"){
+    reasons.push({type:"high",reason:"Overt DIC pattern by lab criteria — does not preclude transplant (Garrouste 2019 propensity-matched showed no impact). Mandatory biopsy + protocol surveillance."});
+  }
+  return {active:reasons.length>0,reasons};
+}
+
+// ============ COMPOSITE SCORE (v0.2 — % of max-of-filled banding) ============
+function _scoreFor(state){
+  const c=[];
+  // 1. Platelet nadir
+  const pn=pf(state.coag.pltNadir);
+  if(state.coag.pltNadir!==""&&!isNaN(pn)){
+    let p=0,r=`${pn} ×10⁹/L`;
+    if(pn<THR.pltLow){p=2;r+=` (severe, <${THR.pltLow})`;}
+    else if(pn<THR.pltMod){p=1;r+=` (moderate, <${THR.pltMod})`;}
+    else r+=` (preserved)`;
+    c.push({label:"Platelet nadir",points:p,reason:r,filled:true,maxPts:2});
+  } else c.push({label:"Platelet nadir",points:0,reason:"not entered",filled:false,maxPts:2});
+  // 2. Coagulation derangement (INR or PT, whichever provided)
+  if(ok(state.coag.inrPeak)){
+    const i=pf(state.coag.inrPeak);
+    let p=0,r=`INR ${i}`;
+    if(i>THR.inrHigh){p=2;r+=` (severe, >${THR.inrHigh})`;}
+    else if(i>THR.inrMod){p=1;r+=` (moderate, >${THR.inrMod})`;}
+    else r+=` (normal)`;
+    c.push({label:"Coag (INR)",points:p,reason:r,filled:true,maxPts:2});
+  } else if(ok(state.coag.ptSec)){
+    const ptv=pf(state.coag.ptSec);
+    let p=0,r=`PT ${ptv} sec`;
+    if(ptv>THR.ptHigh){p=2;r+=` (severe, >${THR.ptHigh}s)`;}
+    else if(ptv>THR.ptMod){p=1;r+=` (moderate, >${THR.ptMod}s)`;}
+    else r+=` (normal)`;
+    c.push({label:"Coag (PT)",points:p,reason:r,filled:true,maxPts:2});
+  } else c.push({label:"Coag (INR/PT)",points:0,reason:"not entered (INR or PT)",filled:false,maxPts:2});
+  // 3. Schistocytes
+  if(state.coag.schistocytes==="present"){c.push({label:"Schistocytes",points:2,reason:"present — MAHA pattern",filled:true,maxPts:2});}
+  else if(state.coag.schistocytes==="absent"){c.push({label:"Schistocytes",points:0,reason:"absent",filled:true,maxPts:2});}
+  else c.push({label:"Schistocytes",points:0,reason:"not assessed (request manual smear)",filled:false,maxPts:2});
+  // 4. Anuria duration
+  const an=pf(state.hemo.anuriaHrs);
+  if(state.hemo.anuriaHrs!==""&&!isNaN(an)){
+    let p=0,r=`${an} h`;
+    if(an>THR.anuriaHighH){p=2;r+=` (>${THR.anuriaHighH}h, severe)`;}
+    else if(an>THR.anuriaModH){p=1;r+=` (>${THR.anuriaModH}h, moderate)`;}
+    else r+=` (limited)`;
+    c.push({label:"Anuria duration",points:p,reason:r,filled:true,maxPts:2});
+  } else c.push({label:"Anuria duration",points:0,reason:"not entered",filled:false,maxPts:2});
+  // 5. Vasopressor burden
+  const pp=pf(state.hemo.pressorPeak);
+  if(state.hemo.pressorPeak!==""&&!isNaN(pp)){
+    let p=0,r=`${pp} µg/kg/min`;
+    if(pp>THR.pressorHigh){p=2;r+=` (high)`;}
+    else if(pp>THR.pressorMod){p=1;r+=` (moderate)`;}
+    else r+=` (low)`;
+    c.push({label:"Vasopressor burden",points:p,reason:r,filled:true,maxPts:2});
+  } else c.push({label:"Vasopressor burden",points:0,reason:"not entered",filled:false,maxPts:2});
+  // 6. Mechanism (mechanism only — not DIC declaration; non-trauma reweighted; max 1 point)
+  const m=state.dem.mechanism;
+  if(m){
+    let p=0,r=m;
+    if(m==="non_trauma"){p=1;r="non-trauma / atypical (CVA / ICH / unknown) — primary TMA possible if MAHA features coexist";}
+    else if(m==="anoxic"){p=1;r="anoxic / cardiac arrest";}
+    else if(m==="trauma"){p=0;r="trauma — DIC favored";}
+    c.push({label:"Mechanism",points:p,reason:r,filled:true,maxPts:1});
+  } else c.push({label:"Mechanism",points:0,reason:"not entered",filled:false,maxPts:1});
+  // 7. Gross appearance
+  const ap=state.retr.appearance;
+  if(ap==="cyanotic"){c.push({label:"Gross appearance",points:2,reason:"diffuse cyanotic",filled:true,maxPts:2});}
+  else if(ap==="mottled"){c.push({label:"Gross appearance",points:1,reason:"mottled / patchy",filled:true,maxPts:2});}
+  else if(ap==="normal"){c.push({label:"Gross appearance",points:0,reason:"normal",filled:true,maxPts:2});}
+  else c.push({label:"Gross appearance",points:0,reason:"not entered",filled:false,maxPts:2});
+
+  const total=c.reduce((a,b)=>a+b.points,0);
+  const filledCount=c.filter(x=>x.filled).length;
+  const maxFilled=c.reduce((a,b)=>a+(b.filled?b.maxPts:0),0);
+  const maxPossible=c.reduce((a,b)=>a+b.maxPts,0);
+  const pctOfFilled=maxFilled>0?(total/maxFilled*100):0;
+  // Apply red flag override
+  const rf=_redFlagFor(state);
+  let band,bandColor,bandLabel,overrideReason="";
+  if(rf.active){
+    const hasDecline=rf.reasons.some(r=>r.type==="decline");
+    const hasHigh=rf.reasons.some(r=>r.type==="high"||r.type==="tma_high"||r.type==="high_acceptable");
+    if(hasDecline){band="decline";bandColor="var(--dkr)";bandLabel="DECLINE (red flag)";overrideReason="Red flag override: irreversible injury";}
+    else if(hasHigh){band="high";bandColor="var(--red)";bandLabel="HIGH (red flag)";overrideReason="Red flag override active";}
+  }
+  if(!overrideReason){
+    if(filledCount<3){band="insufficient";bandColor="var(--t2)";bandLabel="INSUFFICIENT DATA";}
+    else if(pctOfFilled>=THR.scoreHighPct){band="high";bandColor="var(--red)";bandLabel="HIGH RISK";}
+    else if(pctOfFilled>=THR.scoreLowPct){band="int";bandColor="var(--org)";bandLabel="INTERMEDIATE";}
+    else {band="low";bandColor="var(--grn)";bandLabel="LOW RISK";}
+  }
+  return {components:c,total,maxFilled,maxPossible,pctOfFilled,filledCount,band,bandColor,bandLabel,overrideReason,redFlags:rf};
+}
+function computeScore(){return _scoreFor(S);}
+
+// ============ BIOPSY INTERPRETATION ============
+function interpretBiopsy(){
+  if(S.bx.done!=="yes")return null;
+  const findings=[];const flags=[];let severityScore=0;
+  const gp=pf(S.bx.gftPct);
+  if(okZ(S.bx.gftPct)){
+    if(gp>=THR.gftDiffuse){findings.push({l:"Diffuse GFT",d:`${gp}% glomeruli`,sev:"high",pmid:"30720684"});severityScore+=3;flags.push("Diffuse GFT (≥50%): Gao 2019 (n=24, single-center, all severe head trauma) — 92% acceptable graft outcome at 1y in this selected cohort. Expect prolonged DGF; mandate protocol biopsy at 1 mo to confirm resolution.");}
+    else if(gp>0){findings.push({l:"Focal GFT",d:`${gp}% glomeruli`,sev:"mod",pmid:"26689853"});severityScore+=1;flags.push("Focal GFT (&lt;50%): Batra 2016 — DGF rate similar to non-GFT (49% vs 39% NS); resolution by 1 mo in &gt;90%.");}
+    else findings.push({l:"GFT 0%",d:"glomeruli clear of fibrin thrombi",sev:"low"});
+  } else findings.push({l:"GFT %",d:"not quantified",sev:"unk"});
+  if(S.bx.endoSwell==="yes"){findings.push({l:"Endothelial swelling",d:"present",sev:"high",pmid:"30819908"});severityScore+=2;flags.push("Endothelial swelling: shifts pattern toward primary TMA (Zafrani 2019). Donor screen for ADAMTS13 if available.");}
+  if(S.bx.mesangiolysis==="yes"){findings.push({l:"Mesangiolysis",d:"present",sev:"high",pmid:"30819908"});severityScore+=2;flags.push("Mesangiolysis: TMA-pattern injury. Recipient surveillance for de novo TMA mandatory.");}
+  if(S.bx.ptcThrombi==="yes"){findings.push({l:"PTC thrombi",d:"present",sev:"mod"});severityScore+=1;}
+  if(S.bx.atnGrade==="severe"){findings.push({l:"ATN",d:"severe",sev:"mod"});severityScore+=2;}
+  else if(S.bx.atnGrade==="moderate"){findings.push({l:"ATN",d:"moderate",sev:"mod"});severityScore+=1;}
+  else if(S.bx.atnGrade==="mild"){findings.push({l:"ATN",d:"mild",sev:"low"});}
+  if(S.bx.c4d==="positive"){findings.push({l:"C4d (PTC)",d:"positive",sev:"high"});severityScore+=2;flags.push("C4d positive on time-zero biopsy: unusual. Investigate pre-existing donor antibody-mediated process or technical artifact.");}
+  if(S.bx.cd61==="platelet_rich"){findings.push({l:"CD61",d:"platelet-rich",sev:"high",pmid:"30819908"});severityScore+=1;flags.push("CD61 platelet-rich pattern: favors primary TMA over DIC.");}
+  else if(S.bx.cd61==="fibrin_rich"){findings.push({l:"CD61",d:"fibrin-rich",sev:"low"});flags.push("CD61 fibrin-rich pattern: favors DIC over primary TMA — more favorable trajectory.");}
+  if(S.bx.corticalNec==="diffuse"){findings.push({l:"Cortical necrosis",d:"diffuse",sev:"high"});severityScore+=4;flags.push("Diffuse cortical necrosis: irreversible. Decline.");}
+  else if(S.bx.corticalNec==="focal"){findings.push({l:"Cortical necrosis",d:"focal",sev:"mod"});severityScore+=1;}
+  if(S.bx.chronicChanges==="significant"){findings.push({l:"Chronic changes",d:"significant",sev:"mod"});severityScore+=1;}
+  let bandLabel,bandCol;
+  if(severityScore>=6){bandLabel="HIGH-RISK HISTOLOGY";bandCol="var(--red)";}
+  else if(severityScore>=3){bandLabel="INTERMEDIATE HISTOLOGY";bandCol="var(--org)";}
+  else {bandLabel="LOW-RISK HISTOLOGY";bandCol="var(--grn)";}
+  return {findings,flags,severityScore,bandLabel,bandCol};
+}
+
+// ============ DECISION ENGINE (v0.2) ============
+function decisionEngine(){
+  const sc=computeScore();
+  const tma=_tmaSuspicionFor(S);
+  const dic=tma.dic;
+  const bx=interpretBiopsy();
+  const verdicts=[];let toolRec="";
+  // Red flag declines first
+  if(sc.redFlags.active){
+    sc.redFlags.reasons.forEach(r=>{
+      if(r.type==="decline"){verdicts.push({type:"decline",reason:r.reason});toolRec="DECLINE";}
+      else if(r.type==="tma_high"){verdicts.push({type:"caution",reason:r.reason});if(!toolRec)toolRec="DECLINE_OR_HOLD";}
+      else if(r.type==="high_acceptable"){verdicts.push({type:"accept_caution",reason:r.reason});if(!toolRec)toolRec="ACCEPT_CAUTION";}
+      else if(r.type==="high"){verdicts.push({type:"caution",reason:r.reason});if(!toolRec)toolRec="ACCEPT_CAUTION";}
+    });
+  }
+  // No-biopsy decision path — explicit, loud
+  if(S.bx.done!=="yes"){
+    if(sc.band==="high"){
+      verdicts.push({type:"caution",reason:"⚠ HIGH composite score AND no time-zero biopsy. Mandatory pre-implant biopsy before final accept. Do not commit to implant on clinical score alone."});
+      if(!toolRec)toolRec="HOLD_FOR_BIOPSY";
+    } else if(tma.label.indexOf("PRIMARY TMA")===0){
+      verdicts.push({type:"caution",reason:"⚠ Primary donor TMA suspicion AND no time-zero biopsy. Histology mandatory before accept — endothelial swelling / mesangiolysis / CD61 pattern needed to discriminate from DIC."});
+      if(!toolRec)toolRec="HOLD_FOR_BIOPSY";
+    } else if(sc.band==="int"){
+      verdicts.push({type:"caution",reason:"Intermediate composite score and no biopsy. Strongly recommend time-zero biopsy at implant; accept can proceed with biopsy queued."});
+      if(!toolRec)toolRec="ACCEPT_BIOPSY_AT_IMPLANT";
+    } else if(sc.band==="low"){
+      verdicts.push({type:"accept",reason:"Low composite score — standard acceptance. Time-zero biopsy still recommended for cohort capture but not gating."});
+      if(!toolRec)toolRec="ACCEPT";
+    }
+  } else {
+    // Biopsy done
+    if(bx&&bx.severityScore>=6&&!verdicts.some(v=>v.type==="decline")){
+      verdicts.push({type:"caution",reason:"High-risk histology severity. Re-evaluate against center risk tolerance and recipient match."});
+      if(!toolRec)toolRec="ACCEPT_CAUTION";
+    }
+    if(sc.band==="high"&&bx&&bx.severityScore<6){
+      verdicts.push({type:"accept_caution",reason:"High clinical score but histology favorable — DGF likely but graft recoverable based on Batra/Gao cohort data."});
+      if(!toolRec)toolRec="ACCEPT_CAUTION";
+    }
+    if(sc.band==="int"){
+      verdicts.push({type:"accept_caution",reason:"Intermediate composite + biopsy reviewed. Accept with protocolized recipient surveillance (Surveillance tab)."});
+      if(!toolRec)toolRec="ACCEPT_CAUTION";
+    }
+    if(sc.band==="low"&&tma.label.indexOf("PRIMARY TMA")!==0){
+      verdicts.push({type:"accept",reason:"Low composite score, biopsy reviewed, trauma-DIC pattern — standard acceptance."});
+      if(!toolRec)toolRec="ACCEPT";
+    }
+  }
+  // Score above review threshold
+  if(sc.total>=THR.acceptThr&&sc.band!=="insufficient"){
+    verdicts.push({type:"flag",reason:`Score ${sc.total} ≥ center review threshold (${THR.acceptThr}) — escalate to attending nephrologist + surgeon before final commitment.`});
+  }
+  // Insufficient data
+  if(sc.band==="insufficient"){
+    verdicts.push({type:"caution",reason:`Insufficient donor data (${sc.filledCount}/7 components entered). Cannot stratify reliably. Request: peripheral smear, platelet trend, INR or PT, mechanism, anuria duration.`});
+    if(!toolRec)toolRec="INSUFFICIENT_DATA";
+  }
+  // DGF/PNF risk estimate
+  let dgfRisk="moderate",dgfCol="var(--org)";
+  let pnfRisk="low",pnfCol="var(--grn)";
+  if(sc.band==="high"||sc.band==="decline"){dgfRisk="high";dgfCol="var(--red)";}
+  else if(sc.band==="low"){dgfRisk="low";dgfCol="var(--grn)";}
+  if(bx&&bx.severityScore>=6){dgfRisk="high";dgfCol="var(--red)";}
+  if(bx&&S.bx.corticalNec==="diffuse"){pnfRisk="elevated";pnfCol="var(--red)";}
+  else if(sc.band==="high"&&bx&&bx.severityScore>=6){pnfRisk="moderate";pnfCol="var(--org)";}
+
+  return {sc,tma,dic,bx,verdicts,toolRec,dgfRisk,dgfCol,pnfRisk,pnfCol};
+}
+
+// ============ RENDER HELPERS ============
+function renderTabs(){
+  $("tabs").innerHTML=TABS.map((t,i)=>`<button class="tab ${S.tab===i?"act":""}" onclick="S.tab=${i};R()">${t}</button>`).join("");
+}
+function refTag(label){return `<span class="ref-tag">${label}</span>`;}
+function pmidTag(p){return `<span class="pmid-tag">PMID ${p}</span>`;}
+function bg(l,v,u,col,sub){return`<div class="bg" style="background:${col}10;border:1px solid ${col}30"><div class="l">${l}</div><div class="v" style="color:${col}">${v}</div>${u?`<div class="u">${u}</div>`:""}${sub?`<div class="s" style="color:${col}">${sub}</div>`:""}</div>`;}
+function inp(path,placeholder,calc){
+  const parts=path.split(".");let v=S;for(const p of parts)v=v?v[p]:"";
+  return `<input type="text" inputmode="decimal" pattern="[0-9.]*" value="${v||""}" oninput="sV('${path}',this.value)" placeholder="${placeholder||""}" maxlength="8">${calc||""}`;
+}
+function inpText(path,placeholder){
+  const parts=path.split(".");let v=S;for(const p of parts)v=v?v[p]:"";
+  return `<input type="text" value="${(v||"").replace(/"/g,"&quot;")}" oninput="sV('${path}',this.value)" placeholder="${placeholder||""}" maxlength="60">`;
+}
+function sel(path,opts){
+  const parts=path.split(".");let v=S;for(const p of parts)v=v?v[p]:"";
+  return `<select onchange="sV('${path}',this.value)">${opts.map(o=>`<option value="${o[0]}"${(v||"")===o[0]?" selected":""}>${o[1]}</option>`).join("")}</select>`;
+}
+function ta(path,placeholder){
+  const parts=path.split(".");let v=S;for(const p of parts)v=v?v[p]:"";
+  return `<textarea oninput="sV('${path}',this.value)" placeholder="${placeholder||""}">${v||""}</textarea>`;
+}
+
+// ============ TAB 0: DONOR ============
+function renderDonor(){
+  let h="";
+  h+=`<div class="k"><h3>Mechanism & Course</h3><div class="su">Mechanism only — DIC pattern is derived from labs, not declared.</div>
+  <div class="rw">
+    <div class="fl"><label>Mechanism of injury</label>${sel("dem.mechanism",[["","-"],["trauma","Trauma (TBI / polytrauma)"],["anoxic","Anoxic / cardiac arrest"],["non_trauma","Non-trauma / atypical (CVA / ICH / unknown)"]])}</div>
+    <div class="fl"><label>ICU days before BD</label>${inp("dem.icuDays","days")}</div>
+    <div class="fl"><label>Injury → BD (days)</label>${inp("dem.injuryToBdDays","days")}</div>
+    <div class="fl"><label>BD declaration → retrieval (h)</label>${inp("dem.bdToHarvestHours","hours")}</div>
+  </div>
+  </div>`;
+
+  h+=`<div class="k"><h3>Coagulopathy Profile</h3><div class="su">Whatever the donor hospital provides. INR preferred; PT in seconds is an accepted fallback. Manual peripheral smear is the highest-yield underused test — request explicitly.</div>
+  <div class="rw">
+    <div class="fl"><label>Platelet — admission</label>${inp("coag.pltAdmit","×10⁹/L")}</div>
+    <div class="fl"><label>Platelet — nadir</label>${inp("coag.pltNadir","×10⁹/L")}</div>
+    <div class="fl"><label>Platelet — at harvest</label>${inp("coag.pltAtHarvest","×10⁹/L")}</div>
+    <div class="fl"><label>Schistocytes (smear)</label>${sel("coag.schistocytes",[["unk","not done"],["absent","absent"],["present","present"]])}</div>
+  </div>
+  <div class="rw">
+    <div class="fl"><label>INR peak</label>${inp("coag.inrPeak","")}</div>
+    <div class="fl"><label>PT (sec) — fallback</label>${inp("coag.ptSec","sec")}</div>
+    <div class="fl"><label>aPTT (sec)</label>${inp("coag.aptt","sec")}</div>
+    <div class="fl"><label>Fibrinogen (if avail)</label>${inp("coag.fibrinogen","mg/dL")}</div>
+  </div>
+  <div class="rw">
+    <div class="fl"><label>D-dimer (numeric, if avail)</label>${inp("coag.ddimer","µg/mL FEU")}</div>
+    <div class="fl"><label>D-dimer status</label>${sel("coag.ddimerStatus",[["unk","not done / unknown"],["normal","normal by donor-lab ref"],["elevated","elevated by donor-lab ref"]])}</div>
+    <div class="fl"><label>Hb — admission</label>${inp("coag.hbAdmit","g/dL")}</div>
+    <div class="fl"><label>Hb — nadir</label>${inp("coag.hbNadir","g/dL")}</div>
+    <div class="fl"><label>Hb — at harvest</label>${inp("coag.hbAtHarvest","g/dL")}</div>
+  </div>
+  <div class="rw">
+    <div class="fl"><label>PRBC units</label>${inp("coag.bldUnits","units")}</div>
+    <div class="fl"><label>FFP units</label>${inp("coag.ffpUnits","units")}</div>
+    <div class="fl"><label>Platelet units</label>${inp("coag.pltUnits","units")}</div>
+    <div class="fl"><label>Cryoprecipitate</label>${inp("coag.cryoUnits","units")}</div>
+  </div>
+  </div>`;
+
+  // Live derived DIC pattern card
+  const dic=_dicFor(S);
+  if(dic.flag!=="insufficient"){
+    h+=`<div class="k" style="border-left:4px solid ${dic.col}"><h3>Derived Donor Coagulopathy Pattern <span style="float:right;color:${dic.col};font-size:11px">${dic.label}</span></h3><div class="su">Donor coagulopathy pattern logic — computed from available labs (no clinical declaration required). ${dic.pts.toFixed(1)}/${dic.maxPts} weighted points across donor-side coag indicators.</div>
+    ${dic.reasons.length?`<div class="al al-i">Drivers: ${dic.reasons.join(" · ")}</div>`:""}
+    </div>`;
+  }
+
+  h+=`<div class="k"><h3>Hemodynamics</h3>
+  <div class="rw">
+    <div class="fl"><label>Vasopressor agents (#)</label>${inp("hemo.pressorAgents","count")}</div>
+    <div class="fl"><label>Peak NA-equivalent (µg/kg/min)</label>${inp("hemo.pressorPeak","")}</div>
+    <div class="fl"><label>Pressor duration (h)</label>${inp("hemo.pressorDuration","hours")}</div>
+  </div>
+  <div class="rw">
+    <div class="fl"><label>SBP — lowest</label>${inp("hemo.sbpMin","mmHg")}</div>
+    <div class="fl"><label>DBP — lowest</label>${inp("hemo.dbpMin","mmHg")}</div>
+    <div class="fl"><label>MAP (auto)</label>${(()=>{const m=_calcMAP(S.hemo.sbpMin,S.hemo.dbpMin);return `<input type="text" value="${m||""}" disabled style="background:#f5f5f5;color:${ok(m)&&pf(m)<60?"var(--red)":"var(--tx)"}">${m?`<div class="calc">= (${S.hemo.sbpMin} + 2×${S.hemo.dbpMin})/3${pf(m)<60?" — LOW":""}</div>`:`<div class="calc" style="color:var(--t2)">enter SBP + DBP</div>`}`;})()}</div>
+  </div>
+  <div class="rw">
+    <div class="fl"><label>Anuria duration (h)</label>${inp("hemo.anuriaHrs","hours")}</div>
+    <div class="fl"><label>UOP — last 24h</label>${inp("hemo.uop24h","mL")}</div>
+  </div>
+  </div>`;
+
+  h+=`<div class="k"><h3>Renal Function</h3>
+  <div class="rw">
+    <div class="fl"><label>Cr — admission</label>${inp("renal.crAdmit","mg/dL")}</div>
+    <div class="fl"><label>Cr — peak</label>${inp("renal.crPeak","mg/dL")}</div>
+    <div class="fl"><label>Cr — at harvest</label>${inp("renal.crHarvest","mg/dL")}</div>
+    <div class="fl"><label>RRT in donor?</label>${sel("renal.rrt",[["no","No"],["yes","Yes"]])}</div>
+  </div>
+  </div>`;
+
+  h+=`<div class="k"><h3>Retrieval & Gross</h3>
+  <div class="rw">
+    <div class="fl"><label>Gross kidney appearance</label>${sel("retr.appearance",[["normal","Normal"],["mottled","Mottled / patchy"],["cyanotic","Diffuse cyanotic / bluish"]])}</div>
+    <div class="fl"><label>Flush quality</label>${sel("retr.flushQuality",[["good","Good"],["partial","Partial / patchy"],["poor","Poor"]])}</div>
+  </div>
+  <div class="al al-i" style="margin-top:6px"><b>Note:</b> Bluish discoloration alone is non-specific (venous congestion, IVC clamping, post-mortem stasis can mimic). Weight against lab + biopsy data.</div>
+  </div>`;
+
+  return h;
+}
+
+// ============ TAB 1: SCORE ============
+function renderScore(){
+  const sc=computeScore();
+  let h="";
+  // Headline
+  h+=`<div class="sum"><b>Composite Coagulopathy Score: ${sc.total} / ${sc.maxFilled}</b> (max-of-filled) · ${sc.bandLabel} <span class="sl">(${sc.filledCount}/7 components entered, ${sc.pctOfFilled.toFixed(0)}% of available)</span></div>`;
+
+  // Red flag override banner
+  if(sc.redFlags.active){
+    h+=`<div class="redflag"><b>🚩 RED FLAG OVERRIDE ACTIVE</b><br>`;
+    sc.redFlags.reasons.forEach(r=>{h+=`<div style="margin-top:4px">▸ ${r.reason}</div>`;});
+    h+=`</div>`;
+  }
+
+  // Missing data discipline
+  const missing=sc.components.filter(c=>!c.filled);
+  if(missing.length){
+    h+=`<div class="miss"><b>Missing data (${missing.length}/7):</b> ${missing.map(c=>c.label).join(" · ")} — score is computed only on entered components. Each missing component caps the maximum at ${sc.maxFilled} instead of ${sc.maxPossible}.</div>`;
+  }
+
+  // Score bar (% of max-of-filled)
+  const pct=Math.min(100,sc.pctOfFilled);
+  h+=`<div class="k"><div class="scrow"><span>0%</span><span>${THR.scoreLowPct}% (int)</span><span>${THR.scoreHighPct}% (high)</span><span>100%</span></div>
+  <div class="scbar"><div class="scbar-f" style="width:${pct}%;background:${sc.bandColor}"></div></div>
+  <div style="text-align:center;margin-top:6px;font-size:11px;font-weight:700;color:${sc.bandColor}">${sc.bandLabel} — ${pct.toFixed(0)}% of available</div>${sc.overrideReason?`<div style="text-align:center;font-size:9px;color:var(--red);margin-top:3px">${sc.overrideReason}</div>`:""}</div>`;
+
+  // Components table
+  h+=`<div class="k"><h3>Component Breakdown</h3><table><thead><tr><th>Component</th><th style="width:60px">Points</th><th>Reason</th></tr></thead><tbody>`;
+  sc.components.forEach(c=>{
+    const col=c.points===2?"var(--red)":c.points===1?"var(--org)":c.filled?"var(--grn)":"var(--t2)";
+    const dot=c.points===2?"dotr":c.points===1?"doto":c.filled?"dotg":"dotk";
+    h+=`<tr><td><span class="dot ${dot}"></span>${c.label}</td><td style="font-weight:700;color:${col}">${c.filled?`${c.points}/${c.maxPts}`:`<span style="font-size:8px;color:var(--t2)">n/a</span>`}</td><td style="font-size:9px;color:var(--t2)">${c.reason}</td></tr>`;
+  });
+  h+=`</tbody></table></div>`;
+
+  // Banding logic explained
+  h+=`<div class="k"><h3>Banding Logic (current)</h3>
+  <table><thead><tr><th>Band</th><th>% of available</th><th>Implication</th></tr></thead><tbody>
+  <tr><td><span class="chip chip-g">LOW</span></td><td>&lt;${THR.scoreLowPct}%</td><td>Standard acceptance with routine surveillance.</td></tr>
+  <tr><td><span class="chip chip-o">INTERMEDIATE</span></td><td>${THR.scoreLowPct}–${THR.scoreHighPct}%</td><td>Accept with mandatory time-zero biopsy + protocolized recipient surveillance.</td></tr>
+  <tr><td><span class="chip chip-r">HIGH</span></td><td>≥${THR.scoreHighPct}%</td><td>Accept only with mandatory time-zero biopsy + attending review.</td></tr>
+  <tr><td><span class="chip chip-k">INSUFFICIENT</span></td><td>—</td><td>&lt;3 components entered. Cannot stratify.</td></tr>
+  </tbody></table>
+  <div class="al al-w" style="margin-top:6px"><b>Current logic:</b> Banding is <b>% of max-of-filled</b>, not absolute total. Missing data does not silently understate risk. Red flag override can elevate band regardless of % score.</div>
+  </div>`;
+
+  return h;
+}
+
+// ============ TAB 2: DONOR TMA (offer-time discrimination) ============
+function renderDonorTMA(){
+  const tma=_tmaSuspicionFor(S);
+  const dic=tma.dic;
+  let h="";
+  h+=`<div class="sum"><b>Donor-Side TMA Pattern (at offer)</b> · <span style="background:${tma.col};color:#fff;padding:2px 8px;border-radius:4px;font-weight:700">${tma.label}</span> · DIC: <span style="color:${dic.col};font-weight:700">${dic.label}</span></div>`;
+
+  h+=`<div class="al al-i"><b>Scope:</b> This tab evaluates donor-side coagulopathy pattern at offer time. Recipient TMA detection (post-implant) is on the Surveillance tab.</div>`;
+
+  h+=`<div class="k"><h3>Pattern Analysis</h3>
+  <div class="rw">
+    ${bg("Trauma-DIC signal",tma.dicSig,"weighted","var(--grn)")}
+    ${bg("Primary TMA signal",tma.tmaSig,"weighted","var(--red)")}
+  </div>
+  ${tma.reasons.length===0?`<div class="al al-i">Insufficient data. Enter coagulation parameters and mechanism on Donor tab.</div>`:""}
+  ${tma.reasons.length?`<table style="margin-top:6px"><thead><tr><th>Source</th><th>Finding</th><th>Direction</th></tr></thead><tbody>
+  ${tma.reasons.map(r=>{const col=r.dir==="dic"?"var(--grn)":r.dir==="tma"?"var(--red)":"var(--org)";const lbl=r.dir==="dic"?"DIC":r.dir==="tma"?"TMA":"both";return `<tr><td>${r.src}</td><td style="font-size:9px">${r.v}</td><td><span class="chip" style="background:${col}20;color:${col}">${lbl}</span></td></tr>`;}).join("")}
+  </tbody></table>`:""}
+  </div>`;
+
+  h+=`<div class="k"><h3>Discriminator Reference</h3>
+  <table><thead><tr><th>Feature</th><th>Trauma-DIC</th><th>Primary TMA</th></tr></thead><tbody>
+  <tr><td><b>Trigger</b></td><td>Polytrauma, TBI, sepsis, massive transfusion</td><td>Complement dysregulation, ADAMTS13 deficiency, drugs, autoimmune</td></tr>
+  <tr><td><b>Coag profile</b></td><td>PT/aPTT prolonged + fibrinogen low (consumptive)</td><td>Often normal PT/aPTT; isolated thrombocytopenia</td></tr>
+  <tr><td><b>Schistocytes</b></td><td>Variable, modest</td><td>Prominent, typical</td></tr>
+  <tr><td><b>Time course</b></td><td>Acute, post-injury hours-days</td><td>May predate hospitalization</td></tr>
+  <tr><td><b>Biopsy thrombi</b></td><td>Fibrin-rich (CD61 low)</td><td>Platelet-rich (CD61 high), endothelial swelling</td></tr>
+  <tr><td><b>Recipient outcome</b></td><td>Generally favorable; transient recipient DIC may occur ${pmidTag("15644003")}</td><td>Risk of fulminant recipient TMA; may lose graft ${pmidTag("30819908")}</td></tr>
+  <tr><td><b>Reversibility</b></td><td>GFT resolves &gt;90% by 1 mo ${pmidTag("26689853")} ${pmidTag("30720684")}</td><td>Variable; may need recipient PLEX / eculizumab</td></tr>
+  </tbody></table></div>`;
+
+  h+=`<div class="k"><h3>Primary Donor TMA — Recognized Causes</h3>
+  <table><thead><tr><th>Entity</th><th>Donor signal</th><th>Action if recognized</th></tr></thead><tbody>
+  <tr><td>ADAMTS13-mediated TTP</td><td>Severe isolated thrombocytopenia, MAHA, no trauma; collapse may have been initial presentation</td><td>ADAMTS13 if testable; PLEX standby for recipient ${pmidTag("30819908")}</td></tr>
+  <tr><td>VITT (vaccine-induced)</td><td>Anti-PF4 antibodies; recent COVID vaccination; thrombosis</td><td>UK cohort: 2/30 seroconverted; 3 major events ${pmidTag("34214257")} ${pmidTag("35821588")}</td></tr>
+  <tr><td>Atypical HUS / complement-mediated</td><td>Family history, prior episodes; donor end-organ TMA</td><td>Recipient complement gene panel; eculizumab if recipient develops TMA</td></tr>
+  <tr><td>Donor ITP</td><td>Pre-existing autoantibody; isolated severe thrombocytopenia</td><td>Kidney recipients rarely develop ITP (unlike liver); supportive</td></tr>
+  </tbody></table></div>`;
+
+  return h;
+}
+
+// ============ TAB 3: BIOPSY ============
+function renderBiopsy(){
+  let h="";
+  h+=`<div class="k"><h3>Time-Zero Biopsy Capture</h3><div class="su">Per Banff donor consensus (Liapis 2017). Frozen-section reproducibility is moderate; consider second pathologist re-read for cohort cases.</div>
+  <div class="rw">
+    <div class="fl"><label>Biopsy performed?</label>${sel("bx.done",[["no","Not done"],["yes","Yes"]])}</div>
+    <div class="fl"><label>Timing</label>${sel("bx.timing",[["preimplant","Pre-implant"],["reperfusion","Post-reperfusion"],["both","Both (paired)"]])}</div>
+    <div class="fl"><label>Glomeruli sampled (n)</label>${inp("bx.glomTotal","count")}</div>
+    <div class="fl"><label>GFT — % glomeruli</label>${inp("bx.gftPct","%")}</div>
+  </div>
+  <div class="rw">
+    <div class="fl"><label>Endothelial swelling</label>${sel("bx.endoSwell",[["no","Absent"],["yes","Present"],["unk","Not assessed"]])}</div>
+    <div class="fl"><label>Mesangiolysis</label>${sel("bx.mesangiolysis",[["no","Absent"],["yes","Present"],["unk","Not assessed"]])}</div>
+    <div class="fl"><label>PTC thrombi</label>${sel("bx.ptcThrombi",[["no","Absent"],["yes","Present"],["unk","Not assessed"]])}</div>
+    <div class="fl"><label>ATN grade</label>${sel("bx.atnGrade",[["none","None"],["mild","Mild"],["moderate","Moderate"],["severe","Severe"]])}</div>
+  </div>
+  <div class="rw">
+    <div class="fl"><label>C4d (PTC)</label>${sel("bx.c4d",[["unk","Not done"],["negative","Negative"],["positive","Positive"]])}</div>
+    <div class="fl"><label>CD61 (platelet)</label>${sel("bx.cd61",[["unk","Not done"],["fibrin_rich","Fibrin-rich"],["platelet_rich","Platelet-rich"]])}</div>
+    <div class="fl"><label>Cortical necrosis</label>${sel("bx.corticalNec",[["none","Absent"],["focal","Focal"],["diffuse","Diffuse"]])}</div>
+    <div class="fl"><label>Chronic changes</label>${sel("bx.chronicChanges",[["none","Minimal"],["mild","Mild"],["moderate","Moderate"],["significant","Significant"]])}</div>
+  </div>
+  <div class="rw">
+    <div class="fl" style="flex:1 1 100%"><label>Biopsy notes</label>${ta("bx.notes","Pathologist comment")}</div>
+  </div>
+  </div>`;
+
+  if(S.bx.done!=="yes"){
+    h+=`<div class="redflag"><b>⚠ NO TIME-ZERO BIOPSY</b><br>If composite score is HIGH or primary TMA suspected: <b>biopsy is mandatory before final accept.</b> Decision tab will reflect this. For low-risk cases, biopsy still recommended for cohort capture but not gating.</div>`;
+    return h;
+  }
+
+  const interp=interpretBiopsy();
+  if(interp){
+    h+=`<div class="sum" style="background:${interp.bandCol}"><b>Histology: ${interp.bandLabel}</b> · Severity ${interp.severityScore}</div>`;
+    h+=`<div class="k"><h3>Findings</h3><table><thead><tr><th>Lesion</th><th>Finding</th><th>Severity</th></tr></thead><tbody>`;
+    interp.findings.forEach(f=>{
+      const col=f.sev==="high"?"var(--red)":f.sev==="mod"?"var(--org)":f.sev==="low"?"var(--grn)":"var(--t2)";
+      const lbl=f.sev==="high"?"high":f.sev==="mod"?"moderate":f.sev==="low"?"low/none":"unk";
+      h+=`<tr><td><b>${f.l}</b>${f.pmid?" "+pmidTag(f.pmid):""}</td><td style="font-size:9px">${f.d}</td><td><span class="chip" style="background:${col}20;color:${col}">${lbl}</span></td></tr>`;
+    });
+    h+=`</tbody></table></div>`;
+    if(interp.flags.length){
+      h+=`<div class="k"><h3>Interpretation Flags</h3>${interp.flags.map(f=>`<div class="al al-i" style="margin-top:5px">${f}</div>`).join("")}</div>`;
+    }
+  }
+
+  h+=`<div class="k"><h3>Recommended Time-Zero Panel</h3>
+  <table><thead><tr><th>Stain / feature</th><th>Look for</th></tr></thead><tbody>
+  <tr><td>H&E</td><td>Tubular injury grade, glomerular thrombi count, cortical necrosis</td></tr>
+  <tr><td>PAS</td><td>Mesangiolysis, double contours</td></tr>
+  <tr><td>Fibrin (MSB / IHC)</td><td>Glomerular and PTC fibrin thrombi</td></tr>
+  <tr><td>C4d (PTC)</td><td>Document baseline negativity</td></tr>
+  <tr><td>CD61 (platelet IHC)</td><td>Discriminates platelet-rich (TMA) vs fibrin-rich (DIC)</td></tr>
+  <tr><td>EM</td><td>Endothelial swelling, subendothelial widening — only if clinical course demands</td></tr>
+  </tbody></table>
+  <div class="al al-i" style="margin-top:6px"><b>Reproducibility caveat:</b> MAPI inter-observer kappa is 0.29–0.51 on individual parameters; frozen-section reproducibility worse than paraffin (Cabral 2018 ${pmidTag("29198654")}).</div>
+  </div>`;
+
+  return h;
+}
+
+// ============ TAB 4: DECISION ============
+function renderDecision(){
+  const d=decisionEngine();
+  // Persistence of toolRec + delta now handled by syncDecisionState() via _saveSnapshot
+  let h="";
+  h+=`<div class="sum"><b>Composite Decision Output</b> · Score ${d.sc.total}/${d.sc.maxFilled} · ${d.sc.bandLabel} · TMA: ${d.tma.label}</div>`;
+
+  // Risk estimates
+  h+=`<div class="k"><h3>Risk Estimates (qualitative)</h3>
+  <div class="rw">
+    ${bg("DGF risk",d.dgfRisk.toUpperCase(),"composite",d.dgfCol)}
+    ${bg("PNF risk",d.pnfRisk.toUpperCase(),"composite",d.pnfCol)}
+    ${bg("Donor TMA",d.tma.label.indexOf("PRIMARY TMA")===0?"ELEVATED":d.tma.label==="TRAUMA-DIC PATTERN"?"LOW":"MIXED",d.tma.label,d.tma.col)}
+  </div>
+  <div class="al al-i" style="margin-top:6px"><b>Note:</b> Risk estimates are qualitative. Quantitative DGF probability requires the derivation cohort this app is designed to capture.</div>
+  </div>`;
+
+  // Tool recommendation
+  h+=`<div class="k"><h3>Tool Recommendation</h3>`;
+  if(d.verdicts.length===0){
+    h+=`<div class="al al-i">Insufficient data. Complete Donor + (if available) Biopsy tabs.</div>`;
+  } else {
+    d.verdicts.forEach(v=>{
+      let alClass="al-i",icon="ℹ",label="INFO";
+      if(v.type==="decline"){alClass="al-r";icon="✗";label="DECLINE";}
+      else if(v.type==="caution"){alClass="al-w";icon="⚠";label="CAUTION";}
+      else if(v.type==="accept"){alClass="al-ok";icon="✓";label="ACCEPT";}
+      else if(v.type==="accept_caution"){alClass="al-w";icon="⚠";label="ACCEPT WITH CAUTION";}
+      else if(v.type==="flag"){alClass="al-w";icon="🚩";label="FLAG FOR REVIEW";}
+      h+=`<div class="al ${alClass}" style="margin-top:5px"><b>${icon} ${label}:</b> ${v.reason}</div>`;
+    });
+    h+=`<div class="al al-i" style="margin-top:8px;font-weight:600"><b>Tool's bottom-line recommendation:</b> ${d.toolRec.replace(/_/g," ")}</div>`;
+  }
+  h+=`</div>`;
+
+  // Decision recorded — captures delta
+  h+=`<div class="k"><h3>Decision Recorded</h3><div class="su">Capture what was actually done. Delta between tool recommendation and decision taken is captured for audit.</div>
+  <div class="rw">
+    <div class="fl"><label>Tool recommendation (auto)</label><input type="text" value="${d.toolRec.replace(/_/g," ")}" disabled style="background:#f5f5f5"></div>
+    <div class="fl"><label>Decision taken</label>${sel("decision.taken",[["","-"],["accepted","Accepted"],["accepted_caution","Accepted with caution"],["declined","Declined"],["pending","Pending"]])}</div>
+    <div class="fl"><label>Graft (L/R/B)</label>${sel("decision.graftNumber",[["","-"],["L","Left only"],["R","Right only"],["B","Both"]])}</div>
+    <div class="fl"><label>Lead surgeon</label>${inpText("decision.surgeon","initials")}</div>
+  </div>
+  <div class="rw">
+    <div class="fl" style="flex:1 1 100%"><label>Rationale</label>${ta("decision.rationale","Why did you accept/decline? Especially if differs from tool.")}</div>
+  </div>
+  ${d.toolRec&&S.decision.taken&&_deltaCheck(d.toolRec,S.decision.taken)?`<div class="al al-w" style="margin-top:5px"><b>⚠ Delta:</b> Tool recommended <b>${d.toolRec.replace(/_/g," ")}</b>, decision taken <b>${S.decision.taken}</b>. Capture rationale above — these deltas are the most informative cases for cohort calibration.</div>`:""}
+  </div>`;
+
+  // Evidence anchors
+  h+=`<div class="k"><h3>Evidence Anchors</h3>
+  <table><thead><tr><th>Decision context</th><th>Supporting evidence</th></tr></thead><tbody>
+  <tr><td>Trauma-DIC kidneys can be transplanted with acceptable outcomes</td><td>Garrouste 2019 (n=169 vs 338, propensity-matched, no impact) ${pmidTag("29981217")}; Wang 2011 (n=162) ${pmidTag("21372214")}</td></tr>
+  <tr><td>GFT resolves in &gt;90% by 1 mo</td><td>Batra 2016 (n=61) ${pmidTag("26689853")}; Sood 2015 (n=28) ${pmidTag("25740383")}; McCall 2003 ${pmidTag("12811244")}</td></tr>
+  <tr><td>Diffuse GFT acceptable in selected donors</td><td>Gao 2019 (n=24, 92% acceptable graft outcome) ${pmidTag("30720684")}; Soares 2017 (100% GFT, n=2) ${pmidTag("27490412")}</td></tr>
+  <tr><td>Counter-evidence — fibrin thrombi and inferior 6-mo eGFR</td><td>Hansen 2018 (eGFR 29 vs 46, p=0.017) ${pmidTag("29154394")}</td></tr>
+  <tr><td>Primary donor TMA can transmit to recipient (fulminant)</td><td>Zafrani / Coppo 2019 ${pmidTag("30819908")}; Kadambi 2014 (divergent outcomes)</td></tr>
+  <tr><td>VITT donors transmissible but mostly recoverable</td><td>UK cohort (16 donors, 30 recipients) ${pmidTag("34214257")} ${pmidTag("35821588")}</td></tr>
+  <tr><td>Severe AKI donors acceptable long-term</td><td>Heilman 2015 ${pmidTag("25808278")}</td></tr>
+  </tbody></table></div>`;
+
+  return h;
+}
+function _deltaCheck(rec,taken){
+  if(!rec||!taken)return false;
+  // Outright reversals
+  if(rec.indexOf("DECLINE")===0&&taken.indexOf("accept")===0)return true;
+  if(rec==="ACCEPT"&&taken==="declined")return true;
+  // Hold-then-accept (most common pattern that bypasses biopsy)
+  if(rec.indexOf("HOLD")===0&&taken.indexOf("accept")===0)return true;
+  // ACCEPT_CAUTION → accepted without caution flag captured (under-flagging risk)
+  if(rec==="ACCEPT_CAUTION"&&taken==="accepted")return true;
+  if(rec==="ACCEPT_BIOPSY_AT_IMPLANT"&&taken==="accepted")return true;
+  // INSUFFICIENT_DATA → any commitment
+  if(rec==="INSUFFICIENT_DATA"&&(taken==="accepted"||taken==="accepted_caution"))return true;
+  return false;
+}
+
+// ============ TAB 5: SURVEILLANCE (recipient-side TMA detection now lives here) ============
+function renderSurveillance(){
+  let h="";
+  h+=`<div class="k"><h3>Recipient Surveillance Plan</h3><div class="su">Post-implant monitoring for donor coagulopathy / TMA kidney recipients. Recipient TMA can develop independent of donor pattern.</div>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-d">POD 0</div><div>Time-zero biopsy with full panel. Baseline recipient platelet, LDH, peripheral smear, Cr, UOP.</div></div>
+    <div class="tl-item"><div class="tl-d">POD 1</div><div>Platelet, LDH, smear (manual), UOP, Cr. Doppler RI.</div></div>
+    <div class="tl-item"><div class="tl-d">POD 3</div><div>Platelet, LDH, smear, Cr.</div></div>
+    <div class="tl-item"><div class="tl-d">POD 5</div><div>Platelet, LDH, smear, Cr.</div></div>
+    <div class="tl-item"><div class="tl-d">POD 7</div><div>Platelet, LDH, smear, Cr. <b>If oligo-anuric and platelet not recovering → protocol biopsy.</b></div></div>
+    <div class="tl-item"><div class="tl-d">POD 14</div><div>If still DGF, second biopsy. Differentiate persistent ATN from evolving TMA from early ABMR.</div></div>
+    <div class="tl-item"><div class="tl-d">1 month</div><div>Protocol biopsy if any GFT on time-zero — confirm resolution. eGFR, proteinuria.</div></div>
+    <div class="tl-item"><div class="tl-d">3 / 6 / 12 months</div><div>eGFR, proteinuria, DSA, graft survival ascertainment.</div></div>
+  </div>
+  </div>`;
+
+  // Recipient TMA detection logic
+  h+=`<div class="k"><h3>Recipient TMA Detection</h3><div class="su">When does recipient develop TMA post-implant? Pattern: platelet drop &gt;25%, LDH rise, schistocytes, AKI not explained by ATN.</div>
+  <table><thead><tr><th>Trigger</th><th>Action</th></tr></thead><tbody>
+  <tr><td>Platelet drop &gt;25% from baseline at any POD</td><td>LDH, smear, haptoglobin if available, Cr. Differentiate from heparin/induction-related drop.</td></tr>
+  <tr><td>Schistocytes appear post-implant</td><td>Full TMA workup: ADAMTS13 (if accessible), complement panel, biopsy.</td></tr>
+  <tr><td>Persistent oligo-anuria beyond POD 7</td><td>Biopsy. Doppler. Rule out vascular complication.</td></tr>
+  <tr><td>Recipient develops MAHA + thrombocytopenia + AKI</td><td>De novo TMA. ADAMTS13, complement gene panel where feasible. PLEX. Eculizumab if complement-mediated.</td></tr>
+  <tr><td>Persistent DGF + biopsy-proven recurrent TMA</td><td>Multidisciplinary review. Continued PLEX vs eculizumab vs supportive depending on cause.</td></tr>
+  </tbody></table></div>`;
+
+  // Recipient trajectory capture
+  h+=`<div class="k"><h3>Recipient Trajectory Capture</h3><div class="su">For cohort outcome analysis.</div>
+  <div class="rw">
+    <div class="fl"><label>POD 1 platelet</label>${inp("recTma.pod1Plt","×10⁹/L")}</div>
+    <div class="fl"><label>POD 3 platelet</label>${inp("recTma.pod3Plt","×10⁹/L")}</div>
+    <div class="fl"><label>POD 7 platelet</label>${inp("recTma.pod7Plt","×10⁹/L")}</div>
+    <div class="fl"><label>POD 7 smear</label>${sel("recTma.pod7Smear",[["unk","not done"],["normal","normal"],["schisto","schistocytes present"]])}</div>
+  </div>
+  <div class="rw">
+    <div class="fl"><label>POD 1 LDH</label>${inp("recTma.pod1LDH","U/L")}</div>
+    <div class="fl"><label>POD 3 LDH</label>${inp("recTma.pod3LDH","U/L")}</div>
+    <div class="fl"><label>POD 7 LDH</label>${inp("recTma.pod7LDH","U/L")}</div>
+  </div>
+  <div class="rw">
+    <div class="fl"><label>POD 1 UOP</label>${inp("recTma.pod1UOP","mL")}</div>
+    <div class="fl"><label>POD 3 UOP</label>${inp("recTma.pod3UOP","mL")}</div>
+    <div class="fl"><label>POD 7 UOP</label>${inp("recTma.pod7UOP","mL")}</div>
+  </div>
+  <div class="rw">
+    <div class="fl"><label>DGF duration (days)</label>${inp("recTma.dgfDays","days")}</div>
+    <div class="fl"><label>PNF</label>${sel("recTma.pnf",[["no","No"],["yes","Yes"]])}</div>
+    <div class="fl"><label>Recipient biopsy</label>${sel("recTma.recipBx",[["none","None"],["pod7","POD 7"],["pod14","POD 14"],["pod30","POD 30 protocol"],["other","Other"]])}</div>
+    <div class="fl"><label>Biopsy POD</label>${inp("recTma.recipBxDay","day")}</div>
+  </div>
+  <div class="rw">
+    <div class="fl" style="flex:1 1 100%"><label>Recipient biopsy finding</label>${ta("recTma.recipBxFinding","ATN persistent / TMA / ABMR / TCMR / resolved GFT / other")}</div>
+  </div>
+  </div>`;
+
+  // Live recipient TMA flag
+  const rPlt=[pf(S.recTma.pod1Plt),pf(S.recTma.pod3Plt),pf(S.recTma.pod7Plt)].filter(x=>!isNaN(x)&&x>0);
+  if(rPlt.length>=2){
+    const dropPct=((rPlt[0]-Math.min(...rPlt))/rPlt[0]*100);
+    const rLDH=[pf(S.recTma.pod1LDH),pf(S.recTma.pod3LDH),pf(S.recTma.pod7LDH)].filter(x=>!isNaN(x)&&x>0);
+    const ldhRise=rLDH.length>=2&&rLDH[rLDH.length-1]>rLDH[0]*1.5;
+    if(dropPct>25||ldhRise||S.recTma.pod7Smear==="schisto"){
+      h+=`<div class="redflag"><b>🚩 RECIPIENT TMA SIGNAL</b><br>${dropPct>25?`Platelet drop ${dropPct.toFixed(0)}% from POD 1.<br>`:""}${ldhRise?`LDH rising &gt;1.5× baseline.<br>`:""}${S.recTma.pod7Smear==="schisto"?`Schistocytes present POD 7.<br>`:""}<b>Action:</b> Recipient biopsy. ADAMTS13 if accessible. Consider PLEX standby.</div>`;
+    }
+  }
+
+  return h;
+}
+
+// ============ TAB 6: AUDIT ============
+function renderAudit(){
+  const idx=_caseIndex();
+  let h="";
+  h+=`<div class="k"><h3>Cohort Snapshot</h3>
+  <div class="rw">
+    ${bg("Saved cases",idx.length,"in library","var(--pri)")}
+    ${bg("Avg score",idx.filter(c=>c.score!==undefined).length?(idx.reduce((a,b)=>a+(b.score||0),0)/idx.filter(c=>c.score!==undefined).length).toFixed(1):"-","mean","var(--acc)")}
+    ${bg("Accepted",idx.filter(c=>c.decision&&c.decision.indexOf("accepted")===0).length,"cases","var(--grn)")}
+    ${bg("Declined",idx.filter(c=>c.decision==="declined").length,"cases","var(--red)")}
+  </div>
+  </div>`;
+
+  if(idx.length){
+    const dist={low:0,int:0,high:0,decline:0,unk:0};
+    idx.forEach(c=>{
+      if(!c.band){dist.unk++;return;}
+      if(c.band.indexOf("DECLINE")>-1)dist.decline++;
+      else if(c.band.indexOf("HIGH")>-1)dist.high++;
+      else if(c.band.indexOf("INTERMEDIATE")>-1)dist.int++;
+      else if(c.band.indexOf("LOW")>-1)dist.low++;
+      else dist.unk++;
+    });
+    h+=`<div class="k"><h3>Score Band Distribution</h3>
+    <table><thead><tr><th>Band</th><th>n</th><th>%</th></tr></thead><tbody>
+    <tr><td><span class="chip chip-g">LOW</span></td><td>${dist.low}</td><td>${(dist.low/idx.length*100).toFixed(0)}%</td></tr>
+    <tr><td><span class="chip chip-o">INTERMEDIATE</span></td><td>${dist.int}</td><td>${(dist.int/idx.length*100).toFixed(0)}%</td></tr>
+    <tr><td><span class="chip chip-r">HIGH</span></td><td>${dist.high}</td><td>${(dist.high/idx.length*100).toFixed(0)}%</td></tr>
+    ${dist.decline?`<tr><td><span class="chip chip-r">DECLINE (RF)</span></td><td>${dist.decline}</td><td>${(dist.decline/idx.length*100).toFixed(0)}%</td></tr>`:""}
+    ${dist.unk?`<tr><td>Unknown</td><td>${dist.unk}</td><td>${(dist.unk/idx.length*100).toFixed(0)}%</td></tr>`:""}
+    </tbody></table></div>`;
+  }
+
+  h+=`<div class="k"><h3>Variables Captured for Derivation Study</h3>
+  <table><thead><tr><th>Domain</th><th>Variables</th></tr></thead><tbody>
+  <tr><td>Donor demographics</td><td>age, sex, mechanism (3-cat: trauma/anoxic/non-trauma)</td></tr>
+  <tr><td>Coagulation</td><td>plt admit/nadir/harvest, INR or PT, aPTT, fibrinogen, D-dimer, schistocytes, transfusion log</td></tr>
+  <tr><td>Hemodynamics</td><td>pressor agents/peak/duration, SBP/DBP min, MAP (calc), anuria duration, UOP</td></tr>
+  <tr><td>Renal</td><td>Cr admit/peak/harvest, RRT</td></tr>
+  <tr><td>Retrieval</td><td>gross appearance, flush quality</td></tr>
+  <tr><td>Biopsy (Banff)</td><td>GFT %, endothelial swelling, mesangiolysis, PTC thrombi, ATN, C4d, CD61, cortical necrosis, chronic changes</td></tr>
+  <tr><td>Derived</td><td>DIC pattern flag, donor TMA suspicion, red-flag override, composite score (% of max-of-filled)</td></tr>
+  <tr><td>Decision</td><td>tool recommendation, decision taken, delta flag, rationale</td></tr>
+  <tr><td>Outcomes</td><td>POD 1/3/7 platelet/LDH/UOP/smear, DGF days, PNF, recipient biopsy</td></tr>
+  </tbody></table>
+  <div class="al al-i" style="margin-top:6px"><b>Workflow:</b> Save case at offer → reload at 1 week to enter POD trajectory → reload at 1 month + 1 year for outcomes. Export CSV regularly.</div>
+  </div>`;
+
+  h+=`<div class="k"><h3>Export & Backup</h3>
+  <div class="br">
+  <button class="btn btn-p" onclick="exportAllCases()">📤 Export JSON</button>
+  <button class="btn btn-p" onclick="exportAllCasesCSV()">📊 Export CSV (analysis-ready)</button>
+  <button class="btn btn-o" onclick="document.getElementById('caseImportFile').click()">📥 Import JSON</button>
+  </div>
+  <div class="al al-w" style="margin-top:6px"><b>⚠ Backup discipline:</b> localStorage is browser-local. Export weekly to study folder. Loss of browser data = loss of cohort.</div>
+  <div class="al al-i" style="margin-top:5px"><b>CSV export:</b> Domain-ordered (case/provenance → coag → hemo → renal → retrieval → biopsy → derived flags → score → decision → recipient outcomes). Includes score provenance, amendment count, snapshot timestamp, missing-schema field count/list, derived donor coagulopathy flag, donor TMA suspicion, red-flag count, calculated MAP, score percentage of max-of-filled, tool recommendation, decision delta, and full recipient trajectory. Full case state including audit amendments and notes is also available in the JSON export. Open CSV directly in R/Stata/Excel.</div>
+  </div>`;
+
+  h+=`<div class="k"><h3>Study Design Reminders</h3>
+  <table><thead><tr><th>Element</th><th>Recommendation</th></tr></thead><tbody>
+  <tr><td>Sample size</td><td>≥40 derivation + 20 internal validation; LASSO with bootstrap given small N; pre-specify ≤5 predictors</td></tr>
+  <tr><td>Primary outcome</td><td>Composite: DGF &gt;7 days OR biopsy-proven recipient TMA OR 1-yr eGFR &lt;30 OR death-censored graft loss</td></tr>
+  <tr><td>Reporting</td><td>TRIPOD+AI 2024 + TRIPOD 2015 E&E + STROBE</td></tr>
+  <tr><td>Pre-registration</td><td>CTRI before first prospective case</td></tr>
+  <tr><td>Pathology re-read</td><td>Second pathologist; report inter-rater kappa for fibrin thrombi quantification</td></tr>
+  <tr><td>External validation</td><td>2nd Indian center after derivation cohort closes</td></tr>
+  </tbody></table></div>`;
+
+  return h;
+}
+
+// ============ TAB 7: REFERENCE ============
+function renderReference(){
+  let h="";
+  h+=`<div class="k"><h3>Verified Evidence Base</h3><div class="su">All citations verified against PubMed. Cross-referenced from two independent literature syntheses with manual reconciliation.</div></div>`;
+
+  h+=`<div class="bx"><div class="bx-h" onclick="this.nextElementSibling.classList.toggle('hidden')">Donor DIC outcomes ▼</div><div class="bx-b">
+  <div><b>Garrouste C et al.</b> No impact of DIC in kidney donors on long-term kidney transplantation outcome: a multicenter propensity-matched study. <i>Am J Transplant</i> 2019;19(2):448–56. ${pmidTag("29981217")}</div>
+  <div style="margin-top:5px"><b>Wang CJ et al.</b> Implications of donor disseminated intravascular coagulation on kidney allograft recipients. <i>CJASN</i> 2011;6(5):1160–7. ${pmidTag("21372214")}</div>
+  <div style="margin-top:5px"><b>Pastural M et al.</b> Successful kidney transplantation using organs from a donor with DIC. <i>NDT</i> 2001;16(2):412–5. ${pmidTag("11158425")}</div>
+  <div style="margin-top:5px"><b>Bennett WM et al.</b> DIC in a kidney donor associated with transient recipient DIC. <i>Am J Transplant</i> 2005;5(2):412–4. ${pmidTag("15644003")}</div>
+  </div></div>`;
+
+  h+=`<div class="bx"><div class="bx-h" onclick="this.nextElementSibling.classList.toggle('hidden')">Glomerular fibrin thrombi (GFT) ▼</div><div class="bx-b">
+  <div><b>Batra RK, Heilman RL et al.</b> Rapid resolution of donor-derived glomerular fibrin thrombi. <i>Am J Transplant</i> 2016;16(3):1015–20. ${pmidTag("26689853")}</div>
+  <div style="margin-top:5px"><b>Gao G, Jen KY et al.</b> Diffuse donor-derived glomerular fibrin thrombi outcomes. <i>Transplantation</i> 2019;103(9):1921–7. ${pmidTag("30720684")}</div>
+  <div style="margin-top:5px"><b>Hansen D et al.</b> Fibrin thrombi in deceased donor kidneys. <i>APMIS</i> 2018;126(1):3–8. ${pmidTag("29154394")}</div>
+  <div style="margin-top:5px"><b>McCall SJ et al.</b> Microvascular thrombosis in donor kidney biopsies. <i>Transplantation</i> 2003;75(11):1847–52. ${pmidTag("12811244")}</div>
+  <div style="margin-top:5px"><b>Soares KC et al.</b> 100% glomerular fibrin thrombi successful transplantation. <i>Transplantation</i> 2017;101(6):1134–8. ${pmidTag("27490412")}</div>
+  <div style="margin-top:5px"><b>Sood P, Randhawa P et al.</b> Donor kidney microthrombi outcomes. <i>Clin Transplant</i> 2015;29(5):434–8. ${pmidTag("25740383")}</div>
+  </div></div>`;
+
+  h+=`<div class="bx"><div class="bx-h" onclick="this.nextElementSibling.classList.toggle('hidden')">Primary donor TMA / transmission ▼</div><div class="bx-b">
+  <div><b>Zafrani L, …, Coppo P et al.</b> Transfer of ADAMTS13 antibody-mediated TTP via kidney transplantation. <i>Haematologica</i> 2019;104(6):e277–e280. ${pmidTag("30819908")}</div>
+  <div style="margin-top:5px"><b>Kadambi PV et al.</b> Differing tales — same donor, two recipients. <i>Case Rep Transplant</i> 2014;2014:754256.</div>
+  <div style="margin-top:5px"><b>Khan TFT et al.</b> De novo TMA in two recipients from same DD. <i>Clin Nephrol Case Stud</i> 2020;8:30–6. ${pmidTag("32314417")}</div>
+  <div style="margin-top:5px"><b>Greenhall GHB et al.</b> Organ transplantation from VITT donors. <i>Am J Transplant</i> 2021;21(12):4095–7. ${pmidTag("34214257")}</div>
+  <div style="margin-top:5px"><b>Greenhall GHB et al.</b> UK VITT updated analysis. <i>Transplantation</i> 2022;106(9):1824–30. ${pmidTag("35821588")}</div>
+  </div></div>`;
+
+  h+=`<div class="bx"><div class="bx-h" onclick="this.nextElementSibling.classList.toggle('hidden')">Time-zero biopsy methodology ▼</div><div class="bx-b">
+  <div><b>Liapis H et al.</b> Banff Histopathological Consensus Criteria for Preimplantation Kidney Biopsies. <i>Am J Transplant</i> 2017;17(1):140–50. ${pmidTag("27333454")}</div>
+  <div style="margin-top:5px"><b>Munivenkatappa RB et al.</b> MAPI score derivation. <i>Am J Transplant</i> 2008;8(11):2316–24. ${pmidTag("18801024")}</div>
+  <div style="margin-top:5px"><b>Cabral PHL et al.</b> FS vs paraffin MAPI Brazilian cohort. <i>Transplant Proc</i> 2017;49(10):2247–52. ${pmidTag("29198654")}</div>
+  <div style="margin-top:5px"><b>Trailin AV et al.</b> Implant biopsy individual lesions. <i>Exp Clin Transplant</i> 2019;17(4):435–49. ${pmidTag("30119615")}</div>
+  <div style="margin-top:5px"><b>Reindl-Schwaighofer R et al.</b> Procurement biopsy score performance. <i>Transpl Int</i> 2023;36:11399. ${pmidTag("37901299")}</div>
+  <div style="margin-top:5px"><b>Tan J et al.</b> Paraffin core biopsy scoring systems. <i>Ren Fail</i> 2024;46(1):2314630. ${pmidTag("38345067")}</div>
+  <div style="margin-top:5px"><b>Raza SS, Mannon RB, Seifert ME et al.</b> Time-zero histology predictive of KT outcomes. <i>Clin Transplant</i> 2022;36(7):e14676. ${pmidTag("35437836")}</div>
+  </div></div>`;
+
+  h+=`<div class="bx"><div class="bx-h" onclick="this.nextElementSibling.classList.toggle('hidden')">Severe AKI / general donor ▼</div><div class="bx-b">
+  <div><b>Heilman RL et al.</b> Severe AKI deceased donor kidneys. <i>Am J Transplant</i> 2015;15(8):2143–51. ${pmidTag("25808278")}</div>
+  <div style="margin-top:5px"><b>Xu C et al.</b> DCD DIC donor outcomes (China). <i>Transl Androl Urol</i> 2021;10(3):1199–208. ${pmidTag("33850761")}</div>
+  <div style="margin-top:5px"><b>Cheng Y et al.</b> Donor microthrombi recipient TMA outcomes. <i>J Zhejiang Univ Sci B</i> 2023;24(6):524–9. ${pmidTag("37309043")}</div>
+  </div></div>`;
+
+  h+=`<div class="bx"><div class="bx-h" onclick="this.nextElementSibling.classList.toggle('hidden')">Indian / LMIC primary data ▼</div><div class="bx-b">
+  <div><b>Ghuge PP, Kute VB et al.</b> Successful renal transplantation from BD donor with TBI + DIC. <i>Indian J Nephrol</i> 2013;23(6):448–51. ${pmidTag("24339525")}</div>
+  <div style="margin-top:5px"><b>Kute VB et al.</b> Two decades DDKT IKDRC. <i>Exp Clin Transplant</i> 2020;18(5):549–56. ${pmidTag("33143600")}</div>
+  <div style="margin-top:5px"><b>Kute V et al.</b> DDKT in India: status, challenges. <i>Exp Clin Transplant</i> 2020;18(Suppl 2):31–42. ${pmidTag("32758118")}</div>
+  </div></div>`;
+
+  h+=`<div class="k"><h3>Evidence-Graded Answers to Key Questions</h3>
+  <table><thead><tr><th>Question</th><th>Answer</th></tr></thead><tbody>
+  <tr><td>Can trauma-DIC kidneys be safely transplanted?</td><td><b>Yes</b> — strong evidence (Garrouste 2019 propensity-matched; Wang 2011)</td></tr>
+  <tr><td>Does GFT resolve post-implant?</td><td><b>Yes, &gt;90% by 1 mo</b> — Batra 2016, Sood 2015, Soares 2017</td></tr>
+  <tr><td>Does diffuse (≥50%) GFT predict graft loss?</td><td><b>Not in selected donors</b> — Gao 2019, but small cohort. Hansen 2018 suggests inferior 6-mo eGFR.</td></tr>
+  <tr><td>Can primary donor TMA transmit?</td><td><b>Yes, with serious consequences</b> — Zafrani/Coppo 2019; Greenhall 2021/2022 (VITT)</td></tr>
+  <tr><td>Prospectively validated bedside donor coagulopathy / TMA kidney acceptance tool exists?</td><td><b>No</b> — gap this app + cohort study addresses</td></tr>
+  <tr><td>Indian prospective data exists?</td><td><b>No</b> — only Ghuge 2013 case report (n=2). Largest gap.</td></tr>
+  </tbody></table></div>`;
+
+  return h;
+}
+
+// ============ MASTER RENDER ============
+function R(){
+  renderTabs();
+  let h="";
+  if(S.tab===0)h=renderDonor();
+  else if(S.tab===1)h=renderScore();
+  else if(S.tab===2)h=renderDonorTMA();
+  else if(S.tab===3)h=renderBiopsy();
+  else if(S.tab===4)h=renderDecision();
+  else if(S.tab===5)h=renderSurveillance();
+  else if(S.tab===6)h=renderAudit();
+  else if(S.tab===7)h=renderReference();
+  $("ct").innerHTML=h;
+  _rs();
+  _saveSnapshot();
+}
+
+// ============ INIT ============
+_restoreSnapshot();
+syncTopInputs();
+R();
+</script>
+</body>
+</html>
